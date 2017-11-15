@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Battleship2</string>
+    <string name="title_activity_main_menu">MainMenu</string>
+    <string name="title_activity_instructions">InstructionsActivity</string>
 </resources>
