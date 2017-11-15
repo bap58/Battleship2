@@ -2,6 +2,8 @@ package bap58.battleship2;
 
 import android.graphics.Canvas;
 
+import java.util.Random;
+
 import static bap58.battleship2.BoardSquare.squareSize;
 
 
@@ -16,31 +18,51 @@ public class Ship
     int x; //Represents x coordinate of beginning of ship, maybe first square?
     int y; //Represents y coordinate of beginning of ship, maybe first square?
     int size; //Represents the amount of squares in shape
-    BoardSquare[] spots; //Represents the squares that make up the ship
-    String orientation; //Vertical or horizontal
+    //BoardSquare[] spots; //Represents the squares that make up the ship
+    String orientation = "horizontal"; //Vertical or horizontal
+    int hitCount;
 
 
     //constructor for Ship class
-    public Ship(int i1, int j1, int s, BoardSquare[] sp, String o)
+    public Ship(int i1, int j1, int s, String o)
     {
         i = i1;
         j = j1;
+
         x = squareSize + squareSize*i;
         y = squareSize + squareSize*j;
 
         size = s;
-        BoardSquare[] spots = new BoardSquare[size];
-        for(int i = 0; i < size; i++)
-        {
-            //spots[i].setColor(s.getColor());
-            //spots[i].setX(s.getX());
-            //spots[i].setY(s.getY());
-        }
         orientation = o;
+        hitCount = 0;
     }
 
+    //getters
+    int getI(){return i;}
+    int getJ(){return j;}
+    int getX(){return x;}
+    int getY(){return y;}
+    int getSize(){return size;}
+    String getOrientation(){return orientation;}
+    int getHitCount(){return hitCount;}
+
+    //setters
+    void setI(int a)
+    {
+        i=a;
+        x = squareSize + squareSize*i;
+    }
+    void setJ(int a)
+    {
+        j=a;
+        y = squareSize + squareSize*j;
+    }
+    void setSize(int s) {size = s;}
+    void setOrientation(String s){orientation = s;}
+    void incrementHitCount(){hitCount++;}
+
     //Draws a ship
-    public void drawMe(Canvas g)
+    public void drawMe()
     {
         //Check to see if you will draw ship vertically or horizontally
         if(orientation.equals("vertical")) //If shape is vertical
@@ -71,19 +93,7 @@ public class Ship
 
     public boolean isSunk()
     {
-        boolean sunk = true; //Flag to tell if ship is sunk or not
-                              //False, if not sunk. True, if sunk.
-                            //Will be set to false, if any of the squares are still black
-
-        for(int i = 0; i < size; i++) //Go through each of the squares that makes up shape
-        {
-            if(spots[i].getColor() == "black") //If square is black, it has not been hit and
-            {                                  //therefore, the ship is not sunk
-                sunk = false; //Set sunk to false because ship is not sunk
-            }
-        }
-
-        return sunk; //return whether or not the ship is sunk
+        return (hitCount == size);
     }
 
     //Need to figure out how to do this efficiently
