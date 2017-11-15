@@ -5,4 +5,7 @@ package bap58.battleship2;
  */
 
 public class Test {
+
+    //brian's comment is here
+
 }
