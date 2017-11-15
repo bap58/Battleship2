@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 
 import java.util.Random;
 
+import static bap58.battleship2.Board.dimension;
 import static bap58.battleship2.BoardSquare.squareSize;
 
 
@@ -80,13 +81,17 @@ public class Ship
     public void rotate()
     {
 
-        if(orientation.equals("vertical")) //If orientation is currently vertical
+        if(orientation.equals("vertical")&& i + size < dimension) //If orientation is currently vertical
         {
             orientation = "horizontal"; //change to horizontal
         }
-        else //If orientation is currently horizontal
+        else if(orientation.equals("horizontal") && j + size < dimension) //If orientation is currently horizontal
         {
             orientation = "vertical"; //change to vertical
+        }
+        else
+        {
+            //can't do this. add a warning
         }
     }
 

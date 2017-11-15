@@ -1,5 +1,6 @@
 package bap58.battleship2;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -34,6 +35,8 @@ public class Board extends View{
 
         //create 100 squares
         myBoard = mine;
+        ships = new LinkedList<Ship>();
+
         theSquares = new BoardSquare[dimension][dimension];
         for (int i = 0; i < dimension; i++){
             for (int j = 0; j < dimension; j++) {
@@ -116,12 +119,19 @@ public class Board extends View{
     }
 
     public void setShips(LinkedList<Ship> ships) {
-        //randomly set ships
-        //for loop, one for each ship
-        for (int i = 0; i < sizes.length; i++){
-            //int
-            //Ship s = new Ship();
-        }
+        Ship ship1 = new Ship(1, 1, 2, "horizontal");
+        Ship ship2 = new Ship(1, 3, 3, "horizontal");
+        Ship ship3 = new Ship(1, 5, 3, "horizontal");
+        Ship ship4 = new Ship(1, 7, 4, "horizontal");
+        Ship ship5 = new Ship(1, 9, 5, "horizontal");
+
+        ships.add(ship1);
+        ships.add(ship2);
+        ships.add(ship3);
+        ships.add(ship4);
+        ships.add(ship5);
+
+        updateShips();
     }
 
     public void moveShip(){
@@ -129,6 +139,51 @@ public class Board extends View{
     }
 
     public void rotateShip(){
+
+        Iterator<Ship> it = ships.iterator();
+        while(it.hasNext())
+        {
+            Ship ship = it.next();
+            ship.rotate();
+        }
+
+    }
+
+    public void updateShips()
+    {
+        for(int i = 0; i < 5; i++)
+        {
+            for(int j = 0; j < 5; j++)
+            {
+                theSquares[i][j].setColor("blue");
+            }
+        }
+
+        Iterator<Ship> it = ships.iterator();
+        while(it.hasNext())
+        {
+            Ship ship = it.next();
+            int i = ship.getI();
+            int j = ship.getJ();
+            int s = ship.getSize();
+            String o = ship.getOrientation();
+
+            if(o.equals("horizontal"))
+            {
+                for(int a = 0; a < s; a++)
+                {
+                    theSquares[i+a][j].setColor("gray");
+                }
+            }
+            else
+            {
+                for(int a = 0; a < s; a++)
+                {
+                    theSquares[i][j+a].setColor("gray");
+                }
+            }
+
+        }
 
     }
 
