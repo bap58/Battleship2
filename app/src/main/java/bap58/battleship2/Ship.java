@@ -2,6 +2,8 @@ package bap58.battleship2;
 
 import android.graphics.Canvas;
 
+import static bap58.battleship2.BoardSquare.squareSize;
+
 
 /**
  * Created by joe on 11/13/17.
@@ -9,6 +11,8 @@ import android.graphics.Canvas;
 
 public class Ship
 {
+    int i;  //position i in the array
+    int j;  //position j in the array
     int x; //Represents x coordinate of beginning of ship, maybe first square?
     int y; //Represents y coordinate of beginning of ship, maybe first square?
     int size; //Represents the amount of squares in shape
@@ -17,10 +21,13 @@ public class Ship
 
 
     //constructor for Ship class
-    public Ship(int x1, int y1, int s, BoardSquare[] sp, String o)
+    public Ship(int i1, int j1, int s, BoardSquare[] sp, String o)
     {
-        x = x1;
-        y = y1;
+        i = i1;
+        j = j1;
+        x = squareSize + squareSize*i;
+        y = squareSize + squareSize*j;
+
         size = s;
         BoardSquare[] spots = new BoardSquare[size];
         for(int i = 0; i < size; i++)
