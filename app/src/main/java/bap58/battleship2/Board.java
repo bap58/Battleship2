@@ -187,5 +187,35 @@ public class Board extends View{
 
     }
 
+    boolean overlapsAnotherShip(String o, int s, int i1, int j1)
+    {
+        boolean answer = false;
+        String color = "blue";
+
+        if(o.equals("horizontal"))
+        {
+            for(int a = 0; a < s; a++)
+            {
+                color = theSquares[i1+a][j1].getColor();
+                if(color.equals("gray"))
+                {
+                    answer = true;
+                }
+            }
+        }
+        else    //orientation is vertical
+        {
+            for(int a = 0; a < s; a++)
+            {
+                color = theSquares[i1][j1+a].getColor();
+                if(color.equals("gray"))
+                {
+                    answer = true;
+                }
+            }
+        }
+
+        return answer;
+    }
 
 } //end implementing public class Board

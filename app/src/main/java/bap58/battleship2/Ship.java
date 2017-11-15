@@ -108,6 +108,27 @@ public class Ship
 
     }
 
+    public boolean isOffEdge(String orientation1, int size1, int i1, int j1)
+    {
+        boolean answer = false;
+
+        if(orientation1.equals("horizontal"))
+        {
+            if(size1 + i1 >= dimension)
+            {
+                answer = true;
+            }
+        }
+        else    //if vertical
+        {
+            if(size1 + j1 >= dimension)
+            {
+                answer = true;
+            }
+        }
+
+        return answer;
+    }
 
 
 }
