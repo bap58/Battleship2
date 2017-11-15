@@ -25,9 +25,9 @@ public class Ship
         BoardSquare[] spots = new BoardSquare[size];
         for(int i = 0; i < size; i++)
         {
-            spots[i].setColor(s.getColor());
-            spots[i].setX(s.getX());
-            spots[i].setY(s.getY());
+            //spots[i].setColor(s.getColor());
+            //spots[i].setX(s.getX());
+            //spots[i].setY(s.getY());
         }
         orientation = o;
     }

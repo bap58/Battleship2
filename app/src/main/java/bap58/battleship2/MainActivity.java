@@ -14,21 +14,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BoardSquare square1 = new BoardSquare(this, 1, 1);
-        square1.setColor("gray");
-        setContentView(square1);
+        Board theBoard = new Board(this, true);
+        setContentView(theBoard);
 
-
-
-        /*
-        theSquares = new BoardSquare[10][10];
-        for(int i = 1; i <= 10; i++)
-        {
-            for(int j = 1; j <= 10; j++)
-            {
-                theSquares[i][j] = new BoardSquare(this, i, j);
-            }
-        }
-        */
+        theBoard.theSquares[2][2].setColor("gray");
+        theBoard.theSquares[5][6].setColor("gray");
+        theBoard.theSquares[3][9].setColor("red");
+        setContentView(theBoard);
     }
 }

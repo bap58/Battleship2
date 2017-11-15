@@ -9,22 +9,20 @@ import android.view.View;
  * Created by joe on 11/13/17.
  */
 
-public class BoardSquare extends View
+public class BoardSquare
 {
     int x;                      //x coordinate of the square from top left
     int y;                      //y coordinate of the square from top left
     int i;
     int j;
-    static int squareSize = 50; //length of the side of a square (constant)
+    static int squareSize = 80; //length of the side of a square (constant)
     static int edgeWidth = 2;   //width of the border on each square
     String color = "blue";      //color of the square: red for hit, white for miss,
                                 //blue for nothing there, gray for unhit ship there
 
     //constructor
-    public BoardSquare(Context context, int i1, int j1)
+    public BoardSquare(int i1, int j1)
     {
-        super(context);
-
         i = i1;
         j = j1;
 
@@ -41,6 +39,14 @@ public class BoardSquare extends View
     public void setJ(int j1){j = j1;}
     public void setColor(String s){color = s;}
 
+    //getter functions
+    public int getI(){return i;}
+    public int getJ(){return j;}
+    public float getX(){return x;}
+    public float getY(){return y;}
+    public String getColor(){return color;}
+
+    /*
     //drawMe lets the square draw itself on the screen
     @Override public void onDraw(Canvas c)
     {
@@ -77,6 +83,6 @@ public class BoardSquare extends View
                 y+squareSize-edgeWidth, myPaint);
 
     }
-
+    */
 
 }//END class BoardSquare
