@@ -81,11 +81,11 @@ public class Ship
     public void rotate()
     {
 
-        if(orientation.equals("vertical")&& i + size < dimension) //If orientation is currently vertical
+        if(orientation.equals("vertical")&& !isOffEdge("horizontal",size,i,j)) //If orientation is currently vertical
         {
             orientation = "horizontal"; //change to horizontal
         }
-        else if(orientation.equals("horizontal") && j + size < dimension) //If orientation is currently horizontal
+        else if(orientation.equals("horizontal") && !isOffEdge("vertical",size,i,j)) //If orientation is currently horizontal
         {
             orientation = "vertical"; //change to vertical
         }
@@ -103,9 +103,16 @@ public class Ship
 
     //Need to figure out how to do this efficiently
     //Moves the shape when the user moves the ship using his/her finger
-    public void move(int x, int y)
+    public void move(int i1, int j1)
     {
-
+        if(!isOffEdge(orientation, size, i1, j1)) {
+            i = i1;
+            j = j1;
+        }
+        else
+        {
+            //ERROR! moved it off the edge
+        }
     }
 
     public boolean isOffEdge(String orientation1, int size1, int i1, int j1)

@@ -13,13 +13,15 @@ import android.content.Context;
 import android.graphics.Canvas; //graphics
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.view.MotionEvent;
 import android.view.View;
 
 import static bap58.battleship2.BoardSquare.edgeWidth;
 import static bap58.battleship2.BoardSquare.squareSize;
 
 //start implementing public class Board
-public class Board extends View{
+public class Board extends View
+{
 
     BoardSquare[][] theSquares;
     static int dimension = 10;
@@ -138,13 +140,30 @@ public class Board extends View{
 
     }
 
-    public void rotateShip(){
+    public void rotateShip(int i1, int j1){
 
         Iterator<Ship> it = ships.iterator();
         while(it.hasNext())
         {
             Ship ship = it.next();
-            ship.rotate();
+            if(ship.getI() == i1 && ship.getJ() == j1)
+            {
+                String o = ship.getOrientation();
+                String newO = "";
+                if(o.equals("vertical"))
+                {
+                    newO = "horizontal";
+                }
+                else if(o.equals("horizontal"))
+                {
+                    newO = "vertical";
+                }
+
+                if(!overlapsAnotherShip(newO, ship.getSize(), ship.getI(), ship.getJ()))
+                {
+                    ship.rotate();
+                }
+            }
         }
 
     }
@@ -194,7 +213,7 @@ public class Board extends View{
 
         if(o.equals("horizontal"))
         {
-            for(int a = 0; a < s; a++)
+            for(int a = 1; a < s && i1+a < 10; a++)
             {
                 color = theSquares[i1+a][j1].getColor();
                 if(color.equals("gray"))
@@ -205,7 +224,7 @@ public class Board extends View{
         }
         else    //orientation is vertical
         {
-            for(int a = 0; a < s; a++)
+            for(int a = 1; a < s && j1+a < 10; a++)
             {
                 color = theSquares[i1][j1+a].getColor();
                 if(color.equals("gray"))
@@ -216,6 +235,22 @@ public class Board extends View{
         }
 
         return answer;
+    }
+
+    Ship whichShip(int i1, int j1)
+    {
+        Ship ship;
+        Iterator<Ship> it = ships.iterator();
+        while(it.hasNext())
+        {
+            ship = it.next();
+            for(int a = 0; a < ship.getSize(); a++)
+            {
+
+            }
+        }
+
+
     }
 
 } //end implementing public class Board
