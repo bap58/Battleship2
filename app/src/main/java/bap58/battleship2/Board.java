@@ -237,20 +237,59 @@ public class Board extends View
         return answer;
     }
 
-    Ship whichShip(int i1, int j1)
+    int whichShip(int i1, int j1)
     {
-        Ship ship;
+        int index = -1;
+        int counter = 0;
         Iterator<Ship> it = ships.iterator();
         while(it.hasNext())
         {
-            ship = it.next();
-            for(int a = 0; a < ship.getSize(); a++)
+            Ship itShip = it.next();
+            for(int a = 0; a < itShip.getSize(); a++)
             {
+                if((itShip.getOrientation().equals("horizontal")))
+                {
+                    if(i1 == itShip.getI()+a && j1 == itShip.getJ())
+                    {
+                        index = counter;
+                    }
+                }
+                else
+                {
+                    if(i1 == itShip.getI() && j1 == itShip.getJ()+a)
+                    {
+                        index = counter;
+                    }
+                }
 
+            }//end for loop iterating through all the squares of one ship
+
+            counter++;
+        }//end while iterating through ship list
+
+        return index;
+    }
+
+    public boolean isOffEdge(String orientation1, int size1, int i1, int j1)
+    {
+        boolean answer = false;
+
+        if(orientation1.equals("horizontal"))
+        {
+            if(size1 + i1 >= dimension)
+            {
+                answer = true;
+            }
+        }
+        else    //if vertical
+        {
+            if(size1 + j1 >= dimension)
+            {
+                answer = true;
             }
         }
 
-
+        return answer;
     }
 
 } //end implementing public class Board
