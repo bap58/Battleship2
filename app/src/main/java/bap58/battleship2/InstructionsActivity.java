@@ -7,6 +7,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
+/**
+ * Created by Nico on 11/13/2017.
+ **/
+
 public class InstructionsActivity extends AppCompatActivity {
 
     @Override
