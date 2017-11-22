@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity
 
     public void onClick (View v) {
 
-        if(v.getContentDescription() == startGame.getContentDescription())
+        /*if(v.getContentDescription() == startGame.getContentDescription())
         {
             Intent current1 = new Intent(this, SetupActivity.class);
             startActivity(current1);
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity
         {
             Intent current2 = new Intent(this, InstructionsActivity.class);
             startActivity(current2);
-        }
+        }*/
 
     }
 
@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity
         {
             Log.i("-----", "I am in instructions");
             Intent current2 = new Intent(this, InstructionsActivity.class);
+            //Intent current2 = new Intent(this, SetupActivity.class);
             startActivity(current2);
         }
 
