@@ -170,9 +170,9 @@ public class Board extends View
 
     public void updateShips()
     {
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < dimension; i++)
         {
-            for(int j = 0; j < 5; j++)
+            for(int j = 0; j < dimension; j++)
             {
                 theSquares[i][j].setColor("blue");
             }
@@ -276,14 +276,14 @@ public class Board extends View
 
         if(orientation1.equals("horizontal"))
         {
-            if(size1 + i1 >= dimension)
+            if(size1 + i1 > dimension)
             {
                 answer = true;
             }
         }
         else    //if vertical
         {
-            if(size1 + j1 >= dimension)
+            if(size1 + j1 > dimension)
             {
                 answer = true;
             }

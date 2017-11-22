@@ -121,14 +121,14 @@ public class Ship
 
         if(orientation1.equals("horizontal"))
         {
-            if(size1 + i1 >= dimension)
+            if(size1 + i1 > dimension)
             {
                 answer = true;
             }
         }
         else    //if vertical
         {
-            if(size1 + j1 >= dimension)
+            if(size1 + j1 > dimension)
             {
                 answer = true;
             }
