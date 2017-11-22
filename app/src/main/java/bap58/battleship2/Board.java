@@ -23,9 +23,9 @@ import static bap58.battleship2.BoardSquare.squareSize;
 public class Board extends View
 {
 
-    BoardSquare[][] theSquares;
-    static int dimension = 10;
-    static int[] sizes = {2, 3, 3, 4, 5};
+    BoardSquare[][] theSquares; //Matrix of squares that make up the board
+    static int dimension = 10; //Will be the width and length of the board
+    static int[] sizes = {2, 3, 3, 4, 5}; //Represent sizes of game pieces
     boolean myBoard;
     //on own board list ships that player will place
     //on opponent board list is not drawn unless hit
@@ -35,16 +35,17 @@ public class Board extends View
 
         super(context);
 
-        //create 100 squares
         myBoard = mine;
-        ships = new LinkedList<Ship>();
+        ships = new LinkedList<Ship>(); //Create new linked list of game pieces/ships
 
+        //Create the matrix of squares by filling it with 100 new squares
         theSquares = new BoardSquare[dimension][dimension];
         for (int i = 0; i < dimension; i++){
             for (int j = 0; j < dimension; j++) {
                 theSquares[i][j] = new BoardSquare(i, j);
             }
         }
+
         if (mine) {
             setShips(ships);
         } else {
@@ -99,6 +100,7 @@ public class Board extends View
 
     }
 
+    //Not sure if we need this the way we set it up -Joe
     public BoardSquare findSquare(){
 
         BoardSquare square = null;
@@ -120,25 +122,31 @@ public class Board extends View
         return solutions;
     }
 
+    //This function creates the initial set up of ships on the board and adds ship to linked list
     public void setShips(LinkedList<Ship> ships) {
+        //Create each of the 5 individual game pieces
         Ship ship1 = new Ship(1, 1, 2, "horizontal");
         Ship ship2 = new Ship(1, 3, 3, "horizontal");
         Ship ship3 = new Ship(1, 5, 3, "horizontal");
         Ship ship4 = new Ship(1, 7, 4, "horizontal");
         Ship ship5 = new Ship(1, 9, 5, "horizontal");
 
+        //Add each of the newly created ships to the linked list of ships
         ships.add(ship1);
         ships.add(ship2);
         ships.add(ship3);
         ships.add(ship4);
         ships.add(ship5);
 
+        //Update ships and the board to reflect changes made above
         updateShips();
     }
 
+    //Not sure if we still need this function the way we set it up -Joe
     public void moveShip(){
 
     }
+
 
     public void rotateShip(int i1, int j1){
 
@@ -168,34 +176,42 @@ public class Board extends View
 
     }
 
+    //This function updates the ships and the boards to reflect their current state
+    //It will be called any time the game pieces are moved, rotated or changed in any way
     public void updateShips()
     {
-        for(int i = 0; i < 5; i++)
+        //Make all of the squares of the board blue, so that it is a blank slate to redraw
+        //updated ships
+        for(int i = 0; i < 10; i++)
         {
-            for(int j = 0; j < 5; j++)
+            for(int j = 0; j < 10; j++)
             {
                 theSquares[i][j].setColor("blue");
             }
         }
 
-        Iterator<Ship> it = ships.iterator();
+
+        Iterator<Ship> it = ships.iterator(); //Iterator for linked list of ships
+        //Iterate through entire list of ships
         while(it.hasNext())
         {
-            Ship ship = it.next();
-            int i = ship.getI();
-            int j = ship.getJ();
-            int s = ship.getSize();
-            String o = ship.getOrientation();
+            Ship ship = it.next(); //Current ship we are looking at
+            int i = ship.getI(); //Save i of current ship
+            int j = ship.getJ(); //Save j of current ship
+            int s = ship.getSize(); //Save size of current ship
+            String o = ship.getOrientation(); //Save orientation of current ship
 
-            if(o.equals("horizontal"))
+            if(o.equals("horizontal")) //If ships's orientation is horizontal
             {
+                //Draw ship on the board horizontally
                 for(int a = 0; a < s; a++)
                 {
                     theSquares[i+a][j].setColor("gray");
                 }
             }
-            else
+            else //If ship's orientation if vertical
             {
+                //Draw ship on the board vertically
                 for(int a = 0; a < s; a++)
                 {
                     theSquares[i][j+a].setColor("gray");
@@ -206,12 +222,13 @@ public class Board extends View
 
     }
 
+    //Function checks to see if a ship will overlap another ship if moved to a new square
     boolean overlapsAnotherShip(String o, int s, int i1, int j1)
     {
-        boolean answer = false;
+        boolean answer = false; //Return value
         String color = "blue";
 
-        if(o.equals("horizontal"))
+        if(o.equals("horizontal")) //If orientation is horizontal
         {
             for(int a = 1; a < s && i1+a < 10; a++)
             {
