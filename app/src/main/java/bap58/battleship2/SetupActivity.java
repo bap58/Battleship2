@@ -57,6 +57,7 @@ public class SetupActivity extends AppCompatActivity
 
             int indexOfShip = myBoard.whichShip(i,j);
             System.out.println(""+indexOfShip);
+            System.out.println("ship selected is"+shipSelected);
 
             if(!shipSelected && i >= 0 && i < 10 && j >= 0 && j < 10)
             {
@@ -66,6 +67,21 @@ public class SetupActivity extends AppCompatActivity
                 {
                     shipSelected = true;
                     indexSelected = indexOfShip;
+
+                    Iterator<Ship> it = myBoard.ships.iterator();
+                    int counter = 0;
+
+                    while(it.hasNext() && counter <= indexSelected) {
+                        Ship ship = it.next();
+
+                        if(counter == indexSelected)
+                        {
+                            ship.setSelected(true);
+                        }
+
+                        counter++;
+                    }
+
                     System.out.println("got a ship: " + indexSelected);
                 }
             }
@@ -102,17 +118,62 @@ public class SetupActivity extends AppCompatActivity
                         {
                             ship.setI(i);
                             ship.setJ(j);
+                            ship.setSelected(false);
                         }
 
                         counter1++;
                     }
+
+                    myBoard.setShipColor(indexSelected, "gray");
+
                 }
+
                 else
                 {
                     System.out.println("Didn't hit a blue square");
                 }
 
 
+            }
+
+            else if(shipSelected &&  i >= 0 && i < 10 && j >= 11 && j < 13)
+            {
+                System.out.println("rotate button loop");
+
+                Iterator<Ship> it2 = myBoard.ships.iterator();
+                int counter2 = 0;
+                String o2 = "";
+                int s2 = 0;
+                int i2 = 0;
+                int j2 = 0;
+                while(it2.hasNext() && counter2 <= indexSelected) {
+                    Ship ship = it2.next();
+                    o2 = ship.getOrientation();
+                    s2 = ship.getSize();
+                    i2 = ship.getI();
+                    j2 = ship.getJ();
+                    if(counter2 == indexSelected) {
+                        if (o2.equals("vertical")) {
+                            o2 = "horizontal";
+                        } else {
+                            o2 = "vertical";
+                        }
+
+                        if (!myBoard.overlapsAnotherShip(o2, s2, i2, j2) &&
+                                !myBoard.isOffEdge(o2, s2, i2, j2)) {
+                            ship.rotate();
+                            ship.setSelected(false);
+                            shipSelected = false;
+                        }
+                    }
+                    counter2++;
+                }
+
+
+            }
+            else if(!shipSelected &&  i >= 0 && i < 10 && j >= 14 && j < 16)
+            {
+                System.out.println("Ready for battle");;
             }
 
             myBoard.updateShips();
