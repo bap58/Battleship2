@@ -15,6 +15,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 
 import static bap58.battleship2.BoardSquare.edgeWidth;
 import static bap58.battleship2.BoardSquare.squareSize;
@@ -85,6 +86,11 @@ public class Board extends View
                 {
                     myPaint.setColor(Color.WHITE);
                 }
+                else if((theSquares[i][j].getColor()).equals("yellow"))
+                {
+                    myPaint.setColor(Color.YELLOW);
+                }
+
 
                 //set the stroke width to 0 for the square filling
                 myPaint.setStrokeWidth(0);
@@ -97,6 +103,22 @@ public class Board extends View
             }
         }
 
+        //Draw two rectangles for buttons
+        myPaint.setColor(Color.GRAY);
+        canvas.drawRect(squareSize+edgeWidth, 12*squareSize+edgeWidth,
+                11*squareSize-edgeWidth,
+                14*squareSize-edgeWidth, myPaint);
+        myPaint.setColor(Color.RED);
+        canvas.drawRect(squareSize+edgeWidth, 15*squareSize+edgeWidth,
+                11*squareSize-edgeWidth,
+                17*squareSize-edgeWidth, myPaint);
+
+        //put text within the rectangles
+        myPaint.setColor(Color.BLACK);
+        myPaint.setTextSize(100);
+        canvas.drawText("ROTATE", 4*squareSize, 13*squareSize + squareSize/2, myPaint);
+        myPaint.setTextSize(90);
+        canvas.drawText("READY FOR BATTLE", 1*squareSize, 16*squareSize + squareSize/2, myPaint);
     }
 
     public BoardSquare findSquare(){
@@ -136,8 +158,62 @@ public class Board extends View
         updateShips();
     }
 
-    public void moveShip(){
+    public void setShipColor(int iter, String color)
+    {
+        Iterator<Ship> it = ships.iterator();
+        int counter = 0;
+        while(counter <= iter && it.hasNext())
+        {
+            Ship ship = it.next();
+            if(counter == iter)
+            {
+                if(color.equals("yellow"))
+                {
+                    int i = ship.getI();
+                    int j = ship.getJ();
+                    String o = ship.getOrientation();
+                    int s = ship.getSize();
 
+                    if(o.equals("horizontal"))
+                    {
+                        for(int k = i; k < i + s; k++)
+                        {
+                            theSquares[k][j].setColor("yellow");
+                        }
+                    }
+                    else
+                    {
+                        for(int k = j; k < j + s; k++)
+                        {
+                            theSquares[i][k].setColor("yellow");
+                        }
+                    }
+                }
+                else if(color.equals("gray"))
+                {
+                    int i = ship.getI();
+                    int j = ship.getJ();
+                    String o = ship.getOrientation();
+                    int s = ship.getSize();
+
+                    if(o.equals("horizontal"))
+                    {
+                        for(int k = i; k < i + s; k++)
+                        {
+                            theSquares[k][j].setColor("gray");
+                        }
+                    }
+                    else
+                    {
+                        for(int k = j; k < j + s; k++)
+                        {
+                            theSquares[i][k].setColor("gray");
+                        }
+                    }
+                }
+            }
+            counter++;
+        }
     }
 
     public void rotateShip(int i1, int j1){
@@ -191,14 +267,30 @@ public class Board extends View
             {
                 for(int a = 0; a < s; a++)
                 {
-                    theSquares[i+a][j].setColor("gray");
+                    if(ship.getSelected())
+                    {
+                        theSquares[i+a][j].setColor("yellow");
+                    }
+                    else
+                    {
+                        theSquares[i + a][j].setColor("gray");
+                    }
                 }
             }
             else
             {
+
+
                 for(int a = 0; a < s; a++)
                 {
-                    theSquares[i][j+a].setColor("gray");
+                    if(ship.getSelected())
+                    {
+                        theSquares[i][j+a].setColor("yellow");
+                    }
+                    else
+                    {
+                        theSquares[i][j+a].setColor("gray");
+                    }
                 }
             }
 

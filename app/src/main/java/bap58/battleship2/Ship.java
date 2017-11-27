@@ -22,7 +22,7 @@ public class Ship
     //BoardSquare[] spots; //Represents the squares that make up the ship
     String orientation = "horizontal"; //Vertical or horizontal
     int hitCount;
-
+    boolean selected = false;
 
     //constructor for Ship class
     public Ship(int i1, int j1, int s, String o)
@@ -46,6 +46,8 @@ public class Ship
     int getSize(){return size;}
     String getOrientation(){return orientation;}
     int getHitCount(){return hitCount;}
+    boolean getSelected(){return selected;}
+
 
     //setters
     void setI(int a)
@@ -61,21 +63,7 @@ public class Ship
     void setSize(int s) {size = s;}
     void setOrientation(String s){orientation = s;}
     void incrementHitCount(){hitCount++;}
-
-    //Draws a ship
-    public void drawMe()
-    {
-        //Check to see if you will draw ship vertically or horizontally
-        if(orientation.equals("vertical")) //If shape is vertical
-        {
-
-        }
-        else
-        {
-
-        }
-
-    }
+    void setSelected(boolean b){selected = b;}
 
     //Mutator function for orientation of ship. Changes will be displayed to user in drawMe
     public void rotate()
