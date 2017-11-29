@@ -12,12 +12,15 @@ import android.view.View.OnClickListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button startGame;
-    Button instructions;
+    Client client;
+    private String localhost = "127.0.0.1";
+    private int port = 11013;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        client = new Client(localhost, port);
+        client.run();
         setContentView(R.layout.activity_main_menu);
     }
 
@@ -27,15 +30,14 @@ public class MainActivity extends AppCompatActivity {
         if(v.getContentDescription().toString().equals("start"))
         {
             Log.i("-----", "I am in start");
-            Intent current1 = new Intent(this, SetupActivity.class);
-            startActivity(current1);
+            Intent start = new Intent(this, SetupActivity.class);
+            startActivity(start);
         }
         else if(v.getContentDescription().toString().equals("instructions"))
         {
             Log.i("-----", "I am in instructions");
-            Intent current2 = new Intent(this, InstructionsActivity.class);
-            //Intent current2 = new Intent(this, SetupActivity.class);
-            startActivity(current2);
+            Intent instructions = new Intent(this, InstructionsActivity.class);
+            startActivity(instructions);
         }
 
     }

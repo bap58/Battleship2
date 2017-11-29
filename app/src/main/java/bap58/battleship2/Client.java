@@ -1,5 +1,7 @@
 package bap58.battleship2;
 
+import android.util.Log;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.*;
@@ -8,7 +10,7 @@ import java.util.*;
  * Created by Nico on 11/22/17.
  */
 
-public class Client {
+public class Client extends Thread{
     //list of 2
     //main activity
     //oncreate fx, call, open socket, launch thread
@@ -18,6 +20,8 @@ public class Client {
     private Board theGame;
     private BufferedWriter bout;
     private Socket socket;
+    String localhost = "";
+    int port = 0;
 
 
     //Starts a  client with inputted hostname and portnumber, or with defaults 127.0.0.1 and 11013
@@ -27,17 +31,21 @@ public class Client {
             new Client("127.0.0.1", 11013);
 
     }
+    */
 
+    public Client(String name, int p) {
+        localhost = name;
+        port = p;
 
-    public Client(String name, int port) {
+        /*
         try {
-            //this command will throw an exception if "port" is not open
-            socket = new Socket(name, port);
+        //this command will throw an exception if "port" is not open
+            socket = new Socket("127.0.0.1", 11013);
 
             OutputStream out = socket.getOutputStream();
             bout = new BufferedWriter( new OutputStreamWriter( out ) );
 
-            scanner = new Scanner(System.in); //need?
+            theGame = game;
 
             listener = new ClientListener(socket);
             listener.start();
@@ -58,8 +66,9 @@ public class Client {
         }
         catch ( Exception e )
         { System.err.println(e); }
+         */
     }
-    */
+
 
     public Client(Board game) {
         try {
@@ -129,18 +138,44 @@ public class Client {
         @Override
         public void run()
         {
-            try
-            {
+            Log.i("-----", "im hereeeeeee in run inside subclass");
+            try {
                 while(true)
                 {
-                    //prints the server's message as long as it's not empty
                     String serverLine = readLine();
                     if (!serverLine.isEmpty())
                         System.out.println(serverLine);
                 }
+
+            } catch ( Exception e )
+            { System.err.println(e); }
+        }
+    }
+
+    public void run() {
+        Log.i("-----", "im hereeeeeee 1");
+        try {
+            //this command will throw an exception if "port" is not open
+            Log.i("-----", "im in try");
+            socket = new Socket(localhost, port);
+            Log.i("-----", "im after socket");
+
+            OutputStream out = socket.getOutputStream();
+            bout = new BufferedWriter(new OutputStreamWriter(out));
+
+            listener = new ClientListener(socket);
+            listener.start();
+
+            //The main thread stays here and checks for keyboard commands (and sends them to the server) continuously
+            //until the user types /quit
+            while (!socket.isClosed()) {
+                String userCommand = getUserInput(); //adapt to user logged on
+                write(userCommand); //push to server
             }
-            catch (Exception e)
-            {e.printStackTrace();}
+            System.exit(0);
+
+        } catch (Exception e) {
+            System.err.println(e);
         }
     }
 }
