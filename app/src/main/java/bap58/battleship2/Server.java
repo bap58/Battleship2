@@ -11,14 +11,14 @@ public class Server {
     //stores a list of each serverListener (each connected to a client
     private ServerListener[] playerArray;
     private int playerCount = 0;
+    private int port = 11013;
 
     public static void main( String[] args )
     {
-        int portNum = 11013;
-        new Server(portNum);
+        new Server();
     }
 
-    public Server(int port) {
+    public Server() {
         try {
             playerArray = new ServerListener[2];
             sock = new ServerSocket(port); // open socket

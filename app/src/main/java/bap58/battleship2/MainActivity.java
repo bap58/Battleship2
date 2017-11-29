@@ -1,26 +1,32 @@
 package bap58.battleship2;
 
 import android.content.Intent;
-import android.net.wifi.p2p.WifiP2pManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.view.View.OnClickListener;
 
 public class MainActivity extends AppCompatActivity {
 
-    Client client;
-    private String localhost = "127.0.0.1";
+    ClientTalker clientTalker;
+    ClientListener clientListener;
+
+    private String hostIP = "141.161.88.4";
     private int port = 11013;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        client = new Client(localhost, port);
-        client.run();
+        clientTalker = new ClientTalker(hostIP, port);
+        clientTalker.start();
+
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        //clientListener = new ClientListener(clientTalker.getSocket());
+        //clientListener.start();
         setContentView(R.layout.activity_main_menu);
     }
 
