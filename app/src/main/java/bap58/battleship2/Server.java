@@ -1,10 +1,9 @@
-package bap58.battleship2;
-
 import java.io.*;
 import java.net.*;
 
 /**
- * Created by Nico on 11/22/17.
+ * In Android Studio doc to make it easier to share through Github
+ * No package
  */
 
 public class Server {
