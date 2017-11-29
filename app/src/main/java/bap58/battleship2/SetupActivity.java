@@ -1,5 +1,6 @@
 package bap58.battleship2;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -11,7 +12,6 @@ import java.util.Iterator;
 import static bap58.battleship2.BoardSquare.squareSize;
 
 public class SetupActivity extends AppCompatActivity
-    //implements View.OnTouchListener
 {
 
     Board myBoard;
@@ -173,7 +173,10 @@ public class SetupActivity extends AppCompatActivity
             }
             else if(!shipSelected &&  i >= 0 && i < 10 && j >= 14 && j < 16)
             {
-                System.out.println("Ready for battle");;
+                myBoard.inSetup = false;
+                System.out.println("Ready for battle");
+
+                startGame();
             }
 
             myBoard.updateShips();
@@ -182,6 +185,29 @@ public class SetupActivity extends AppCompatActivity
             return false;
         }
     };
+
+    void startGame()
+    {
+        Intent gameIntent = new Intent(this, GameActivity.class);
+
+        String[] shipStrings = new String[5];
+        Iterator<Ship> it = myBoard.ships.iterator();
+        int counter = 0;
+        while(it.hasNext())
+        {
+            Ship ship = it.next();
+            shipStrings[counter] = ship.toString();
+            counter++;
+        }
+
+        gameIntent.putExtra("ship0", shipStrings[0]);
+        gameIntent.putExtra("ship1", shipStrings[1]);
+        gameIntent.putExtra("ship2", shipStrings[2]);
+        gameIntent.putExtra("ship3", shipStrings[3]);
+        gameIntent.putExtra("ship4", shipStrings[4]);
+
+        startActivity(gameIntent);
+    }
 
     /*
     @Override

@@ -1,7 +1,9 @@
 package bap58.battleship2;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.StringTokenizer;
 
 /**
  * Created by Brian on 11/13/2017.
@@ -22,11 +24,13 @@ import static bap58.battleship2.BoardSquare.squareSize;
 
 //start implementing public class Board
 public class Board extends View
+    implements Serializable
 {
 
     BoardSquare[][] theSquares;
     static int dimension = 10;
     static int[] sizes = {2, 3, 3, 4, 5};
+    boolean inSetup = true;
     boolean myBoard;
     //on own board list ships that player will place
     //on opponent board list is not drawn unless hit
@@ -46,11 +50,14 @@ public class Board extends View
                 theSquares[i][j] = new BoardSquare(i, j);
             }
         }
-        if (mine) {
+
+        setShips(ships);
+
+        /*if (mine) {
             setShips(ships);
         } else {
             getShips();
-        }
+        }*/
         //randomly place ships on personal board
         //create list of possible wins when player pushes play game
     }
@@ -59,35 +66,31 @@ public class Board extends View
 
         Paint myPaint = new Paint();
 
-        for (int i = 0; i < dimension; i++){
+        for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 //draw the border of the square in black
 
                 myPaint.setStrokeWidth(edgeWidth);
                 myPaint.setColor(Color.WHITE);
                 canvas.drawRect(theSquares[i][j].getX(), theSquares[i][j].getY(),
-                        theSquares[i][j].getX()+squareSize,
-                        theSquares[i][j].getY()+squareSize, myPaint);
+                        theSquares[i][j].getX() + squareSize,
+                        theSquares[i][j].getY() + squareSize, myPaint);
 
                 //determine the color to fill the square
-                if((theSquares[i][j].getColor()).equals("blue"))
-                {
+                if ((theSquares[i][j].getColor()).equals("blue")) {
                     myPaint.setColor(Color.BLUE);
-                }
-                else if((theSquares[i][j].getColor()).equals("gray"))
-                {
-                    myPaint.setColor(Color.GRAY);
-                }
-                else if((theSquares[i][j].getColor()).equals("red"))
-                {
+                } else if ((theSquares[i][j].getColor()).equals("gray")) {
+                    if(myBoard){
+                        myPaint.setColor(Color.GRAY);
+                    }
+                    else{
+                        myPaint.setColor(Color.BLUE);
+                    }
+                } else if ((theSquares[i][j].getColor()).equals("red")) {
                     myPaint.setColor(Color.RED);
-                }
-                else if((theSquares[i][j].getColor()).equals("white"))
-                {
+                } else if ((theSquares[i][j].getColor()).equals("white")) {
                     myPaint.setColor(Color.WHITE);
-                }
-                else if((theSquares[i][j].getColor()).equals("yellow"))
-                {
+                } else if ((theSquares[i][j].getColor()).equals("yellow")) {
                     myPaint.setColor(Color.YELLOW);
                 }
 
@@ -95,30 +98,33 @@ public class Board extends View
                 //set the stroke width to 0 for the square filling
                 myPaint.setStrokeWidth(0);
                 //draw the square
-                canvas.drawRect(theSquares[i][j].getX()+edgeWidth,
-                        theSquares[i][j].getY()+edgeWidth,
-                        theSquares[i][j].getX()+squareSize-edgeWidth,
-                        theSquares[i][j].getY()+squareSize-edgeWidth, myPaint);
+                canvas.drawRect(theSquares[i][j].getX() + edgeWidth,
+                        theSquares[i][j].getY() + edgeWidth,
+                        theSquares[i][j].getX() + squareSize - edgeWidth,
+                        theSquares[i][j].getY() + squareSize - edgeWidth, myPaint);
 
             }
         }
 
-        //Draw two rectangles for buttons
-        myPaint.setColor(Color.GRAY);
-        canvas.drawRect(squareSize+edgeWidth, 12*squareSize+edgeWidth,
-                11*squareSize-edgeWidth,
-                14*squareSize-edgeWidth, myPaint);
-        myPaint.setColor(Color.RED);
-        canvas.drawRect(squareSize+edgeWidth, 15*squareSize+edgeWidth,
-                11*squareSize-edgeWidth,
-                17*squareSize-edgeWidth, myPaint);
+        if (inSetup) {
+            //Draw two rectangles for buttons
+            myPaint.setColor(Color.GRAY);
+            canvas.drawRect(squareSize + edgeWidth, 12 * squareSize + edgeWidth,
+                    11 * squareSize - edgeWidth,
+                    14 * squareSize - edgeWidth, myPaint);
+            myPaint.setColor(Color.RED);
+            canvas.drawRect(squareSize + edgeWidth, 15 * squareSize + edgeWidth,
+                    11 * squareSize - edgeWidth,
+                    17 * squareSize - edgeWidth, myPaint);
 
-        //put text within the rectangles
-        myPaint.setColor(Color.BLACK);
-        myPaint.setTextSize(100);
-        canvas.drawText("ROTATE", 4*squareSize, 13*squareSize + squareSize/2, myPaint);
-        myPaint.setTextSize(90);
-        canvas.drawText("READY FOR BATTLE", 1*squareSize, 16*squareSize + squareSize/2, myPaint);
+            //put text within the rectangles
+            myPaint.setColor(Color.BLACK);
+            myPaint.setTextSize(100);
+            canvas.drawText("ROTATE", 4 * squareSize, 13 * squareSize + squareSize / 2, myPaint);
+            myPaint.setTextSize(90);
+            canvas.drawText("READY FOR BATTLE", 1 * squareSize, 16 * squareSize + squareSize / 2, myPaint);
+
+        }
     }
 
     public BoardSquare findSquare(){
@@ -382,6 +388,28 @@ public class Board extends View
         }
 
         return answer;
+    }
+
+    public void fromString(String[] shipString)
+    {
+        int counter = 0;
+        Iterator<Ship> it = ships.iterator();
+        while(it.hasNext())
+        {
+            Ship ship = it.next();
+
+            StringTokenizer st = new StringTokenizer(shipString[counter]);
+            String str = st.nextToken();
+            ship.setI(Integer.parseInt(str));
+            str = st.nextToken();
+            ship.setJ(Integer.parseInt(str));
+            str = st.nextToken();
+            ship.setOrientation(str);
+            str = st.nextToken();
+            ship.setSize(Integer.parseInt(str));
+
+            counter++;
+        }
     }
 
 } //end implementing public class Board
