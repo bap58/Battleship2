@@ -28,7 +28,7 @@
         android:id="@+id/start"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|left"
+        android:layout_gravity="center_horizontal|top"
         android:contentDescription="start"
         android:onClick="clickedButton"
         android:text="Let's Battle!"
@@ -39,7 +39,7 @@
         android:id="@+id/instructions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical|right"
+        android:layout_gravity="center_horizontal|bottom"
         android:contentDescription="instructions"
         android:onClick="clickedButton"
         android:text="Instructions"
@@ -58,13 +58,5 @@
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:text="Battleship" />
 
 </android.support.design.widget.CoordinatorLayout>

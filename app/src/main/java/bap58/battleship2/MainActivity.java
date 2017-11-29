@@ -10,8 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.view.View.OnClickListener;
 
-public class MainActivity extends AppCompatActivity
-        implements OnClickListener {
+public class MainActivity extends AppCompatActivity {
 
     Button startGame;
     Button instructions;
@@ -20,39 +19,6 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_menu);
-
-        LinearLayout lay = new LinearLayout(this);
-        lay.setOrientation(LinearLayout.VERTICAL);
-        lay.setShowDividers(LinearLayout.SHOW_DIVIDER_BEGINNING);
-
-        startGame = new Button(this);
-        startGame.setText("Start Game");
-        startGame.setContentDescription("start");
-        startGame.setOnClickListener(this);
-        lay.addView(startGame);
-
-        instructions = new Button(this);
-        instructions.setText("Instructions");
-        instructions.setContentDescription("instructions");
-        instructions.setOnClickListener(this);
-        lay.addView(instructions);
-
-        //setContentView(lay);
-    }
-
-    public void onClick (View v) {
-
-        /*if(v.getContentDescription() == startGame.getContentDescription())
-        {
-            Intent current1 = new Intent(this, SetupActivity.class);
-            startActivity(current1);
-        }
-        else if(v.getContentDescription() == instructions.getContentDescription())
-        {
-            Intent current2 = new Intent(this, InstructionsActivity.class);
-            startActivity(current2);
-        }*/
-
     }
 
     public void clickedButton (View v) {

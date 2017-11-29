@@ -6,15 +6,16 @@
     android:layout_height="match_parent"
     tools:context="bap58.battleship2.SetupActivity">
 
+    <bap58.battleship2.Board
+        android:layout_width="384dp"
+        android:layout_height="311dp"/>
 
     <Button
         android:id="@+id/play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|bottom"
-        android:layout_marginBottom="16dp"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
+        android:layout_marginBottom="24dp"
         android:contentDescription="play"
         android:onClick="clickedButton"
         android:text="Ready for Battle!"
@@ -22,6 +23,7 @@
         app:layout_anchorGravity="center_vertical|right"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.963"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -29,8 +31,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|top"
-        android:layout_marginEnd="32dp"
-        android:layout_marginStart="32dp"
         android:contentDescription="rotate"
         android:onClick="clickedButton"
         android:text="Rotate"
@@ -38,6 +38,7 @@
         app:layout_anchorGravity="center_vertical|right"
         app:layout_constraintBottom_toTopOf="@+id/play"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.968"
         app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
