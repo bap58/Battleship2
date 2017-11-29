@@ -84,6 +84,16 @@ public class Server {
             return msg;
         }
 
+        void tellOpponent(ServerListener sender, String message) throws Exception
+        {
+            System.out.println("trying to tell others!!");
+            if(!playerArray[0].equals(sender)) {
+                playerArray[0].write(message);
+            }
+            else {
+                playerArray[1].write(message);
+            }
+        }
 
         //takes "line" from client and processes it, seeing if any keywords were written.
         //closes socket if "/quit" is written
@@ -93,15 +103,25 @@ public class Server {
             String[] arrOfWords = line.split(" ");
 
             //user wants to change their name
-            if (arrOfWords[0].equals("torpedo") && arrOfWords.length > 1)
+            if (arrOfWords[0].equals("/torpedo") && arrOfWords.length > 3)
             {
+                String position = arrOfWords[1] + " " +arrOfWords[2];
+                //send to opposite client
+                tellOpponent(this, position);
+            }
 
+            else if (arrOfWords[0].equals("/setup") && arrOfWords.length > 1)
+            {
+                String ships = "";
+                //send to opposite
+                tellOpponent(this, ships);
             }
 
             //user wants to quit
             else if (arrOfWords[0].equals("/quit"))
             {
                 //send message to other player that they know we are quitting
+                tellOpponent(this, "Opponent has left the chat room!");
                 clientSocket.close();
             }
 

@@ -15,20 +15,23 @@ public class Client {
     //pass address around after opening socket
 
     private ClientListener listener;
-    private Scanner scanner; //change to Game
+    private Board theGame;
     private BufferedWriter bout;
     private Socket socket;
 
+
     //Starts a  client with inputted hostname and portnumber, or with defaults 127.0.0.1 and 11013
+    /*
     public static void main( String[] args )
     {
             new Client("127.0.0.1", 11013);
 
     }
 
+
     public Client(String name, int port) {
         try {
-        //this command will throw an exception if "port" is not open
+            //this command will throw an exception if "port" is not open
             socket = new Socket(name, port);
 
             OutputStream out = socket.getOutputStream();
@@ -56,11 +59,43 @@ public class Client {
         catch ( Exception e )
         { System.err.println(e); }
     }
+    */
+
+    public Client(Board game) {
+        try {
+        //this command will throw an exception if "port" is not open
+            socket = new Socket("127.0.0.1", 11013);
+
+            OutputStream out = socket.getOutputStream();
+            bout = new BufferedWriter( new OutputStreamWriter( out ) );
+
+            theGame = game;
+
+            listener = new ClientListener(socket);
+            listener.start();
+
+            //The main thread stays here and checks for keyboard commands (and sends them to the server) continuously
+            //until the user types /quit
+            while(!socket.isClosed())
+            {
+                String userCommand = getUserInput(); //adapt to user logged on
+                write(userCommand); //push to server
+                if (userCommand.split(" ")[0].equals("/quit")) //quit = a button instead for game
+                {
+                    socket.close();
+                }
+            }
+            System.exit(0);
+
+        }
+        catch ( Exception e )
+        { System.err.println(e); }
+    }
 
     //Returns keyboard input, blocks until enter is hit
     private String getUserInput()
     {
-        String line = scanner.nextLine();
+        String line = "";//theGame.getMove();
         return line;
     }
 
