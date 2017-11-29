@@ -126,4 +126,14 @@ public class Ship
     }
 
 
+    public String toString()
+    {
+        String returnString = "";
+
+        returnString = i+" "+j+" "+orientation+" "+size;
+
+        return returnString;
+    }
+
+
 }
