@@ -1,10 +1,9 @@
-package bap58.battleship2;
-
 import java.io.*;
 import java.net.*;
 
 /**
- * Created by Nico on 11/22/17.
+ * In Android Studio doc to make it easier to share through Github
+ * No package
  */
 
 public class Server {
@@ -16,7 +15,6 @@ public class Server {
     public static void main( String[] args )
     {
         int portNum = 11013;
-
         new Server(portNum);
     }
 
@@ -43,6 +41,7 @@ public class Server {
 
             playerArray[playerCount] = sListenerThread;
             playerCount++;
+            System.out.println("Player " + playerCount + " just connected!");
 
             sListenerThread.start();
         }
