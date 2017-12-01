@@ -412,4 +412,98 @@ public class Board extends View
         }
     }
 
+
+    //Will be used to handle click of opponent that app receives from server
+    public void convertIandJFromString(String IandJ)
+    {
+
+       StringTokenizer st = new StringTokenizer(IandJ);
+       int i = Integer.parseInt(st.nextToken());
+       int j = Integer.parseInt(st.nextToken());
+
+       //Handle the opponent's turn
+       handleTurn(i, j);
+
+    }
+
+
+
+    //Takes an i and j of either player and changes the color of square based on hit or miss
+    //Will work for both offensive turns and when the opponent performs their turn
+    public void handleTurn(int i, int j)
+    {
+        //This should be fine because of the way we set up onDraw
+        //Even though we will be drawing a blue square where the opponent's ships are, the square
+        //still knows that it is gray
+        if(theSquares[i][j].getColor().equals("gray"))
+        {
+            theSquares[i][j].setColor("red");
+        }
+        else if(theSquares[i][j].getColor().equals("blue"))
+        {
+            theSquares[i][j].setColor("white");
+        }
+    }
+    //Update drawing of board after this function is called
+
+
+    //This function will be called after each turn taken
+    //It will go through the list of ships and check to see if any of them are sunk
+    //If a ship is sunk, it will update its boolean value to indicate it has been sunk
+    public void updateIfSunk()
+    {
+        Iterator<Ship> it = ships.iterator();
+        while(it.hasNext())
+        {
+            Ship ship = it.next();
+            int hitCount = 0;
+            if(ship.getSunk() == false) //This is so we don't check ships that are already sunk
+            {
+                for (int i = 0; i < ship.getSize(); i++)
+                {
+                    if (ship.orientation.equals("horizontal"))
+                    {
+                        if (theSquares[ship.getI() + i][ship.getJ()].getColor().equals("red"))
+                        {
+                            hitCount++;
+                        }
+                    } else {
+                        if (theSquares[ship.getI()][ship.getJ() + i].getColor().equals("red"))
+                        {
+                            hitCount++;
+                        }
+                    }
+                }
+
+                if (hitCount == ship.getSize()) {
+                    ship.setSunk(true);
+                }
+            }
+
+        }
+    }
+
+    //This function goes through the list of ships and finds out if all of them are sunk
+    //If true, we have a winner
+    //If false, nothing will happen
+    public boolean winner()
+    {
+        Iterator<Ship> it = ships.iterator();
+        boolean allSunk = true;
+        while(it.hasNext())
+        {
+            Ship ship = it.next();
+
+            if(ship.getSunk() == false)
+            {
+                allSunk = false;
+            }
+
+        }
+
+        return allSunk;
+    }
+
+
+
 } //end implementing public class Board
