@@ -22,7 +22,8 @@ public class Ship
     //BoardSquare[] spots; //Represents the squares that make up the ship
     String orientation = "horizontal"; //Vertical or horizontal
     int hitCount;
-    boolean selected = false;
+    boolean selected;
+    boolean sunk;
 
     //constructor for Ship class
     public Ship(int i1, int j1, int s, String o)
@@ -36,6 +37,8 @@ public class Ship
         size = s;
         orientation = o;
         hitCount = 0;
+        sunk = false;
+        selected = false;
     }
 
     //getters
@@ -47,6 +50,8 @@ public class Ship
     String getOrientation(){return orientation;}
     int getHitCount(){return hitCount;}
     boolean getSelected(){return selected;}
+    boolean getSunk() {return sunk;}
+
 
 
     //setters
@@ -64,6 +69,7 @@ public class Ship
     void setOrientation(String s){orientation = s;}
     void incrementHitCount(){hitCount++;}
     void setSelected(boolean b){selected = b;}
+    void setSunk(boolean b) {sunk = b;}
 
     //Mutator function for orientation of ship. Changes will be displayed to user in drawMe
     public void rotate()
@@ -86,7 +92,7 @@ public class Ship
 
     public boolean isSunk()
     {
-        return (hitCount == size);
+        return sunk;
     }
 
     //Need to figure out how to do this efficiently
