@@ -8,20 +8,10 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    private String hostIP = "141.161.88.4";
-    private int port = 11013;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        //clientListener = new ClientListener(clientTalker.getSocket());
-        //clientListener.start();
         setContentView(R.layout.activity_main_menu);
     }
 
