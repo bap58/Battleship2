@@ -125,6 +125,26 @@ public class Board extends View
             canvas.drawText("READY FOR BATTLE", 1 * squareSize, 16 * squareSize + squareSize / 2, myPaint);
 
         }
+        else
+        {
+            myPaint.setColor(Color.GRAY);
+            canvas.drawRect(squareSize + edgeWidth, 12 * squareSize + edgeWidth,
+                    11 * squareSize - edgeWidth,
+                    14 * squareSize - edgeWidth, myPaint);
+            myPaint.setColor(Color.BLACK);
+            myPaint.setTextSize(90);
+            String option = "";
+            if(myBoard) {
+                option = "See Enemy Board";
+            }
+            else
+            {
+                option = "See My Board";
+            }
+            canvas.drawText(option, 3 * squareSize / 2, 13 * squareSize + squareSize / 2, myPaint);
+
+        }
+        //System.out.println("done drawing board");
     }
 
     public BoardSquare findSquare(){

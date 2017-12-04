@@ -14,6 +14,7 @@ public class GameActivity extends AppCompatActivity
     Board myBoard;
     Board yourBoard;
     Boolean myTurn = false;
+    Boolean viewMe = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +43,7 @@ public class GameActivity extends AppCompatActivity
         yourBoard = new Board(this, false);
         yourBoard.inSetup = false;
 
+        myBoard.setOnTouchListener(touchListener);
         yourBoard.setOnTouchListener(touchListener);
         setContentView(yourBoard);
 
@@ -63,15 +65,43 @@ public class GameActivity extends AppCompatActivity
             //This is just me testing some of the new functions, they seem to be working
             //Did not put in any error checking, so make sure not to click outside the board or else
             //it will explode lol
-            yourBoard.handleTurn(i, j);
-            yourBoard.updateIfSunk();
+            if(!viewMe && i >= 0 && i < 10 && j >= 0 && j < 10)
+            {
+                yourBoard.handleTurn(i, j);
+                yourBoard.updateIfSunk();
+            }
+            else if(i >= 0 && i < 10 && j >= 11 && j < 13)
+            {
+                System.out.println("clicked the switch button");
+                if(viewMe)
+                {
+                    viewMe = false;
+                }
+                else
+                {
+                    viewMe = true;
+                }
+            }
+
+
             if(yourBoard.winner() == true)
             {
                 System.out.println("Winner Winner Chicken Dinner");
             }
-            setContentView(yourBoard);
+            //setContentView(yourBoard);
 
+            if(!viewMe)
+            {
+                setContentView(yourBoard);
+                //System.out.println("view my board");
+            }
+            else
+            {
+                setContentView(myBoard);
+                //System.out.println("view your board");
+            }
 
+            //System.out.println("Done with click");
 
             return false;
         }
