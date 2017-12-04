@@ -419,6 +419,7 @@ public class Board extends View
             Ship ship = it.next();
 
             StringTokenizer st = new StringTokenizer(shipString[counter]);
+            String dummy = st.nextToken();
             String str = st.nextToken();
             ship.setI(Integer.parseInt(str));
             str = st.nextToken();

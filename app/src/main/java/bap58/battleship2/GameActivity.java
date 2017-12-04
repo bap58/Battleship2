@@ -25,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.StringTokenizer;
 
 import static bap58.battleship2.BoardSquare.squareSize;
 
@@ -44,6 +45,9 @@ public class GameActivity extends AppCompatActivity
     Socket sock; // the connection to your server
     boolean keepGoing = true; // set to false to shut down input loop
     Ear ear; // object that sets up network and listens for input from other player.
+
+    String[] shipStrings1 = new String[5];
+    int shipCounter = 0;
 
 
     @Override
@@ -170,6 +174,28 @@ public class GameActivity extends AppCompatActivity
                 try
                 {
                     line = bin.readLine();
+                    StringTokenizer st = new StringTokenizer(line);
+                    String check = st.nextToken();
+                    if(check.equals("Board"))
+                    {
+                        shipStrings1[shipCounter] = line;
+                        shipCounter++;
+
+                        if(shipCounter == 5)
+                        {
+                            yourBoard.fromString(shipStrings1);
+                            yourBoard.updateShips();
+                        }
+
+                    }
+                    else if(check.equals("Move"))
+                    {
+                        int i = Integer.parseInt(st.nextToken());
+                        int j = Integer.parseInt(st.nextToken());
+
+                        myBoard.handleTurn(i,j);
+                        myTurn = true;
+                    }
 
                     //heard.setText(line); // your code replaces this ... does
                     // what you need to do in the game based on this message,

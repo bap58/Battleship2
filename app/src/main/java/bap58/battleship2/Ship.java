@@ -136,7 +136,7 @@ public class Ship
     {
         String returnString = "";
 
-        returnString = i+" "+j+" "+orientation+" "+size;
+        returnString = "Board" + i+" "+j+" "+orientation+" "+size;
 
         return returnString;
     }
