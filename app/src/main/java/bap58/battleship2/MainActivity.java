@@ -8,17 +8,12 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
 
-    ClientTalker clientTalker;
-    ClientListener clientListener;
-
     private String hostIP = "141.161.88.4";
     private int port = 11013;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        clientTalker = new ClientTalker(hostIP, port);
-        clientTalker.start();
 
         try {
             Thread.sleep(1000);

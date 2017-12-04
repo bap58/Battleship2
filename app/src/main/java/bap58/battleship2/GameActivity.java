@@ -6,6 +6,26 @@ import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 
+import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 import static bap58.battleship2.BoardSquare.squareSize;
 
 public class GameActivity extends AppCompatActivity
@@ -15,6 +35,16 @@ public class GameActivity extends AppCompatActivity
     Board yourBoard;
     Boolean myTurn = false;
     Boolean viewMe = false;
+
+    BufferedReader bin; // object for input from port
+    PrintWriter pout;   // object for output to port
+    //String ip = "2600:8806:6101:e200:4428:c73a:455f:dd88";
+    String ip = "10.0.2.2"; // this computer
+    int port = 11011; // if you are on your own machine, this can be whatever.
+    Socket sock; // the connection to your server
+    boolean keepGoing = true; // set to false to shut down input loop
+    Ear ear; // object that sets up network and listens for input from other player.
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,4 +137,82 @@ public class GameActivity extends AppCompatActivity
         }
 
     };
+
+
+
+    // makes the call (opens the socket), and then oepns the read
+    // and writ objects.  Then goes into a loop to listen to any
+    // messages coming over the network.  NOTE: in this test shell
+    // version, I'm just writing whatever came over the network to
+    // the 'heard' field.  You will want to take the message and
+    // perform whatever game function is specified by it.
+    public class Ear extends Thread
+    {
+        @Override
+        public void run()
+        {
+            try
+            {
+                System.out.println("-----------about to try to call " + ip + "/" + port);
+                sock = new Socket(ip, port);
+                System.out.println("-----------woohoo! socket established.");
+
+                InputStream in = sock.getInputStream();
+                bin = new BufferedReader(new InputStreamReader(in));
+                pout = new PrintWriter(sock.getOutputStream(), true);
+            }
+            catch( Exception e )
+            { System.out.println("------------ Ear setup error = "+e); }
+
+            while ( keepGoing )
+            {
+                String line;
+                try
+                {
+                    line = bin.readLine();
+
+                    //heard.setText(line); // your code replaces this ... does
+                    // what you need to do in the game based on this message,
+                    // not just print to 'heard' field like I do here.
+                    //System.out.println("heard:"+line); write to someplace
+                    Thread.sleep(1000);
+                    if (line==null || line.equals("null") ) { keepGoing = false; }
+
+                }
+                catch(Exception e )
+                { System.out.println("Ear error reading from pipe="+e); }
+            }
+        }
+    }
+
+    // separate thread for sending messages.  In Java on terminal this does
+    // not need a separate thread, but in Android it does .
+    // This is intended to be launched in anonymous thread, and since the
+    // run() function takes no argument, we send the message first to the
+    // constructor which stores it in msg, and then (presumably) the
+    // thread is started and run() uses and sends msg immediately
+    // (and then the anonymous thread disappears).
+    // If you have coded the actions in your game as one line string
+    // commands, you can use this class without alteration I think.
+    public class Mouth implements Runnable
+    {
+        String msg;
+
+        public Mouth( String s )
+        {
+            msg = s;
+        }
+
+        // send s out on the socket
+        public void run()
+        {
+            try
+            {
+                pout.println( msg );
+                pout.flush();
+            }
+            catch(Exception e)
+            {System.out.println("Mouth error trying to output to client="+e);}
+        }
+    }
 }
