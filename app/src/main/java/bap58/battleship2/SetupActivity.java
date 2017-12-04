@@ -41,8 +41,10 @@ public class SetupActivity extends AppCompatActivity
         }
         */
 
-        myBoard.updateShips();
-        setContentView(myBoard);
+        //Not necessary, remember this only executes when it is created
+        //and we already are displaying the board
+        //myBoard.updateShips();
+        //setContentView(myBoard);
     }
 
     View.OnTouchListener touchListener = new View.OnTouchListener(){

@@ -16,8 +16,8 @@ public class Ship
 {
     int i;  //position i in the array
     int j;  //position j in the array
-    int x; //Represents x coordinate of beginning of ship, maybe first square?
-    int y; //Represents y coordinate of beginning of ship, maybe first square?
+    int x;  //Represents x coordinate of beginning of ship, maybe first square?
+    int y;  //Represents y coordinate of beginning of ship, maybe first square?
     int size; //Represents the amount of squares in shape
     //BoardSquare[] spots; //Represents the squares that make up the ship
     String orientation = "horizontal"; //Vertical or horizontal
@@ -136,7 +136,7 @@ public class Ship
     {
         String returnString = "";
 
-        returnString = "Board" + i+" "+j+" "+orientation+" "+size;
+        returnString = "Board " + i + " " + j + " " + orientation + " " + size;
 
         return returnString;
     }

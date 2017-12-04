@@ -3,6 +3,7 @@ package bap58.battleship2;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -29,59 +30,105 @@ import java.util.StringTokenizer;
 
 import static bap58.battleship2.BoardSquare.squareSize;
 
+/*
+Things to do:
+- Let the player know when they are connected to another player
+- Take turns
+ */
+
 public class GameActivity extends AppCompatActivity
 {
+    //two boards to go back and forth between
+    Board myBoard;       //where the player located his ships, and where his opponent has launched torpedoes
+    Board opponentBoard; //where the player has launched torpedoes, and whether or not the guesses where correct
 
-    Board myBoard;
-    Board yourBoard;
-    Boolean myTurn = false;
-    Boolean viewMe = false;
+    Boolean myTurn = false; //this mobile game works on a turn basis
+    Boolean viewMe = false; //flag to decide which board to show
 
     BufferedReader bin; // object for input from port
     PrintWriter pout;   // object for output to port
-    //String ip = "2600:8806:6101:e200:4428:c73a:455f:dd88";
-    String ip = "10.0.2.2"; // this computer
-    int port = 11011; // if you are on your own machine, this can be whatever.
-    Socket sock; // the connection to your server
-    boolean keepGoing = true; // set to false to shut down input loop
-    Ear ear; // object that sets up network and listens for input from other player.
 
-    String[] shipStrings1 = new String[5];
+    String ip = "10.0.0.57"; //number depending on the server it is running on
+
+    int port = 11013;  //It can be any number as long as it is the same in the Server.java code
+
+    Socket sock; // the connection to the server
+    boolean keepGoing = true; // set to false to shut down input loop
+    Ear ear; // object that sets up network and listens for input from other player
+
+    String[] shipStrings = new String[5];
     int shipCounter = 0;
 
+    Thread t;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_game);
+        //setContentView(R.layout.activity_game);
 
         //get the extras from launching this intent
         Intent gameIntent = getIntent();
 
-        String[] shipStrings = new String[5];
-        shipStrings[0] = gameIntent.getStringExtra("ship0");
-        shipStrings[1] = gameIntent.getStringExtra("ship1");
-        shipStrings[2] = gameIntent.getStringExtra("ship2");
-        shipStrings[3] = gameIntent.getStringExtra("ship3");
-        shipStrings[4] = gameIntent.getStringExtra("ship4");
+        //created this outside..right?
+        //String[] shipStrings = new String[5];
 
         //instantiate my board
         myBoard = new Board(this, true);
         myBoard.inSetup = false;
 
-        myBoard.fromString(shipStrings);
-        myBoard.updateShips();
-        setContentView(myBoard);
+        //instatiate opponent board
+        opponentBoard = new Board(this, false);
+        opponentBoard.inSetup = false;
 
-        //instatiate your board
-        yourBoard = new Board(this, false);
-        yourBoard.inSetup = false;
+        //connecting to the server
+        try
+        {
+            ear = new Ear();
+            ear.start();
 
-        myBoard.setOnTouchListener(touchListener);
-        yourBoard.setOnTouchListener(touchListener);
-        setContentView(yourBoard);
+            t.sleep(4000); //give it time to connect and then continue
+
+            for (int i = 0; i < 5; i++){
+                shipStrings[i] = gameIntent.getStringExtra("ship" + Integer.toString(i));
+            }
+
+            myBoard.fromString(shipStrings);
+            myBoard.updateShips();
+
+            (t = new Thread( new Mouth("Ready"))).start();
+
+            myBoard.setOnTouchListener(touchListener);
+            opponentBoard.setOnTouchListener(touchListener);
+
+        }
+        catch ( Exception e )
+        { System.err.println("-----------GameShell setup error="+e); }
 
 
+        /*
+        shipStrings[0] = gameIntent.getStringExtra("ship0");
+        shipStrings[1] = gameIntent.getStringExtra("ship1");
+        shipStrings[2] = gameIntent.getStringExtra("ship2");
+        shipStrings[3] = gameIntent.getStringExtra("ship3");
+        shipStrings[4] = gameIntent.getStringExtra("ship4");
+        */
+
+        //myBoard.fromString(shipStrings);
+        //myBoard.updateShips();
+
+        //not necessary because as soon as the opponent board is created it will show that
+        //therefore we have to choose which board we want to show when they are starting game
+        //I suggest the opponent board (changed the name to make it more clear)
+        //setContentView(myBoard);
+
+        //instatiate opponent board
+        //opponentBoard = new Board(this, false);
+        //opponentBoard.inSetup = false;
+        //opponentBoard.updateShips();
+
+        //myBoard.setOnTouchListener(touchListener);
+        //opponentBoard.setOnTouchListener(touchListener);
+        setContentView(opponentBoard);
 
 
     }
@@ -101,8 +148,8 @@ public class GameActivity extends AppCompatActivity
             //it will explode lol
             if(!viewMe && i >= 0 && i < 10 && j >= 0 && j < 10)
             {
-                yourBoard.handleTurn(i, j);
-                yourBoard.updateIfSunk();
+                opponentBoard.handleTurn(i, j);
+                opponentBoard.updateIfSunk();
             }
             else if(i >= 0 && i < 10 && j >= 11 && j < 13)
             {
@@ -117,16 +164,16 @@ public class GameActivity extends AppCompatActivity
                 }
             }
 
-
-            if(yourBoard.winner() == true)
+/*
+            if(opponentBoard.winner() == true)
             {
                 System.out.println("Winner Winner Chicken Dinner");
             }
             //setContentView(yourBoard);
-
+*/
             if(!viewMe)
             {
-                setContentView(yourBoard);
+                setContentView(opponentBoard);
                 //System.out.println("view my board");
             }
             else
@@ -139,6 +186,15 @@ public class GameActivity extends AppCompatActivity
 
             return false;
         }
+
+        /*
+        --! Put this code somewhere in on touch or replace with take turn
+
+        String line = et.getText().toString();
+        //String line = scan.nextLine(); // get input from user
+        Thread t;
+        (t = new Thread( new Mouth(line))).start();
+         */
 
     };
 
@@ -174,6 +230,24 @@ public class GameActivity extends AppCompatActivity
                 try
                 {
                     line = bin.readLine();
+
+                    String[] st = line.split(" ");
+                    switch (st[0]){
+                        case "Ready":
+                            for (int i = 0; i < 5; i++){
+
+                                (t = new Thread( new Mouth(shipStrings[i]))).start();
+
+                            }
+                        case "Board":
+                            opponentBoard.fromString(line);
+                        case "Torpedo":
+                            opponentBoard.torpedo(line);
+                        default:
+                            Log.i("-------", "loop not prepared for that message" + line);
+                    }
+
+                    /*
                     StringTokenizer st = new StringTokenizer(line);
                     String check = st.nextToken();
                     if(check.equals("Board"))
@@ -196,7 +270,7 @@ public class GameActivity extends AppCompatActivity
                         myBoard.handleTurn(i,j);
                         myTurn = true;
                     }
-
+*/
                     //heard.setText(line); // your code replaces this ... does
                     // what you need to do in the game based on this message,
                     // not just print to 'heard' field like I do here.

@@ -15,6 +15,7 @@ import android.content.Context;
 import android.graphics.Canvas; //graphics
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -51,11 +52,13 @@ public class Board extends View
             }
         }
 
-        setShips(ships);
+        //setShips(ships);
 
-        /*if (mine) {
+        //only set ships if it is my Board
+        //if it is the opponent's board, I will get the information in the messages
+        if (mine) {
             setShips(ships);
-        } else {
+        } /*else {
             getShips();
         }*/
         //randomly place ships on personal board
@@ -63,6 +66,7 @@ public class Board extends View
     }
 
     @Override public void onDraw(Canvas canvas) {
+        //super.onDraw(canvas);
 
         Paint myPaint = new Paint();
 
@@ -169,6 +173,14 @@ public class Board extends View
     }
 
     public void setShips(LinkedList<Ship> ships) {
+        Ship ship;
+        int[] sizes = {2, 3, 3, 4, 5};
+        for (int i = 0; i < 5; i++){
+            ship = new Ship(1, 1 + i*2, sizes[i], "horizontal");
+            ships.add(ship);
+        }
+
+        /*
         Ship ship1 = new Ship(1, 1, 2, "horizontal");
         Ship ship2 = new Ship(1, 3, 3, "horizontal");
         Ship ship3 = new Ship(1, 5, 3, "horizontal");
@@ -180,6 +192,8 @@ public class Board extends View
         ships.add(ship3);
         ships.add(ship4);
         ships.add(ship5);
+
+        */
 
         updateShips();
     }
@@ -418,6 +432,7 @@ public class Board extends View
         {
             Ship ship = it.next();
 
+            /*
             StringTokenizer st = new StringTokenizer(shipString[counter]);
             String dummy = st.nextToken();
             String str = st.nextToken();
@@ -429,19 +444,41 @@ public class Board extends View
             str = st.nextToken();
             ship.setSize(Integer.parseInt(str));
 
+            */
+            Log.i("____________", shipString[counter]);
+            String[] st = shipString[counter].split(" ");
+            ship.setI(Integer.parseInt(st[1]));
+            ship.setJ(Integer.parseInt(st[2]));
+            ship.setOrientation(st[3]);
+            ship.setSize(Integer.parseInt(st[4]));
+
             counter++;
         }
     }
 
+    public void fromString(String shipString)
+    {
+        Ship newShip = new Ship(1, 1, 1 , "horizontal");
+        String[] st = shipString.split(" ");
+        newShip.setI(Integer.parseInt(st[1]));
+        newShip.setJ(Integer.parseInt(st[2]));
+        newShip.setOrientation(st[3]);
+        newShip.setSize(Integer.parseInt(st[4]));
+        ships.add(newShip);
+    }
+
 
     //Will be used to handle click of opponent that app receives from server
-    public void convertIandJFromString(String IandJ)
+    public void torpedo(String location)
     {
-
-       StringTokenizer st = new StringTokenizer(IandJ);
-       int i = Integer.parseInt(st.nextToken());
-       int j = Integer.parseInt(st.nextToken());
-
+        String[] st = location.split(" ");
+        int i = Integer.parseInt(st[1]);
+        int j = Integer.parseInt(st[2]);
+            /*
+           StringTokenizer st = new StringTokenizer(IandJ);
+           int i = Integer.parseInt(st.nextToken());
+           int j = Integer.parseInt(st.nextToken());
+            */
        //Handle the opponent's turn
        handleTurn(i, j);
 
