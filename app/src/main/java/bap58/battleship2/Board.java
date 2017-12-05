@@ -75,7 +75,7 @@ public class Board extends View
                 //draw the border of the square in black
 
                 myPaint.setStrokeWidth(edgeWidth);
-                myPaint.setColor(Color.WHITE);
+                myPaint.setColor(Color.BLACK);
                 canvas.drawRect(theSquares[i][j].getX(), theSquares[i][j].getY(),
                         theSquares[i][j].getX() + squareSize,
                         theSquares[i][j].getY() + squareSize, myPaint);
