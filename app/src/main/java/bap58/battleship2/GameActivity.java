@@ -57,10 +57,13 @@ public class GameActivity extends AppCompatActivity
     Ear ear; // object that sets up network and listens for input from other player
 
     String[] shipStrings = new String[5];
+    String[] opponentShipStrings = new String[5];
     int shipCounter = 0;
 
     Thread t;
     boolean firstClick = true;
+
+    int boardCount = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +92,8 @@ public class GameActivity extends AppCompatActivity
 
             t.sleep(4000); //give it time to connect and then continue
 
-            for (int i = 0; i < 5; i++){
+            for (int i = 0; i < 5; i++)
+            {
                 shipStrings[i] = gameIntent.getStringExtra("ship" + Integer.toString(i));
             }
 
@@ -147,14 +151,17 @@ public class GameActivity extends AppCompatActivity
 
             if(myTurn && (!viewMe && i >= 0 && i < 10 && j >= 0 && j < 10))
             {
-                opponentBoard.handleTurn(i, j);
-                opponentBoard.updateIfSunk();
+                if(!opponentBoard.theSquares[i][j].getColor().equals("red") &&
+                        !opponentBoard.theSquares[i][j].getColor().equals("white"))
+                {
+                    opponentBoard.handleTurn(i, j);
+                    opponentBoard.updateIfSunk();
 
-                String line = "Torpedo " + i + " " + j;
-                (t = new Thread(new Mouth(line))).start();
-                myTurn = false;
-                myBoard.myTurn = false;
-
+                    String line = "Torpedo " + i + " " + j;
+                    (t = new Thread(new Mouth(line))).start();
+                    myTurn = false;
+                    myBoard.myTurn = false;
+                }
 
             }
             else if(i >= 0 && i < 10 && j >= 11 && j < 13)
@@ -173,7 +180,11 @@ public class GameActivity extends AppCompatActivity
 
             if(opponentBoard.winner() == true)
             {
-                System.out.println("Winner Winner Chicken Dinner");
+                System.out.println("You win");
+            }
+            else if(myBoard.winner() == true)
+            {
+                System.out.println("Your opponent wins");
             }
             //setContentView(yourBoard);
 
@@ -192,16 +203,6 @@ public class GameActivity extends AppCompatActivity
 
             return false;
         }
-
-        /*
-        --! Put this code somewhere in on touch or replace with take turn
-
-        String line = et.getText().toString();
-        //String line = scan.nextLine(); // get input from user
-        Thread t;
-        (t = new Thread( new Mouth(line))).start();
-         */
-
     };
 
 
@@ -237,64 +238,85 @@ public class GameActivity extends AppCompatActivity
                 {
                     line = bin.readLine();
 
-                    String[] st = line.split(" ");
+                    /*String[] st = line.split(" ");
                     switch (st[0]){
                         case "Ready":
-                            for (int i = 0; i < 5; i++){
+                            /*if(boardCount <= 5)
+                            {
+                                for (int i = 0; i < 5; i++) {
 
-                                (t = new Thread( new Mouth(shipStrings[i]))).start();
-                                System.out.println("Just sent ship " + i);
-                            }
-                            (t = new Thread( new Mouth("Yes"))).start();
+                                    (t = new Thread(new Mouth(shipStrings[i]))).start();
+                                    System.out.println("Just sent ship " + i);
+                                }
+                            }*/
+                            /*(t = new Thread( new Mouth("Yes"))).start();
                         case "Yes":
-                            for (int i = 0; i < 5; i++){
+                            if(boardCount < 5)
+                            {
+                                for (int i = 0; i < 5; i++) {
 
-                                (t = new Thread( new Mouth(shipStrings[i]))).start();
-                                System.out.println("Just sent ship " + i);
+                                    (t = new Thread(new Mouth(shipStrings[i]))).start();
+                                    System.out.println("Just sent ship " + i);
+                                }
                             }
 
                         case "Board":
                             Log.i("-------", "I heard......" + line);
-                            opponentBoard.fromString(line);
-                            opponentBoard.updateShips();
+                            if(boardCount < 5)
+                            {
+                                opponentShipStrings[boardCount] = line;
+                                boardCount++;
+                            }
+                            if(boardCount == 5)
+                            {
+                                opponentBoard.fromString(opponentShipStrings);
+                                opponentBoard.updateShips();
+                            }
+
+
                         case "Torpedo":
                             myBoard.torpedo(line);
                             myTurn = true;
                             myBoard.myTurn = true;
                         default:
-                            Log.i("-------", "loop not prepared for that message " + line);
-                    }
+                            Log.i("-------", "loop not prepared for that message " + line);*/
+                    //}
 
-                    /*
+
+
                     StringTokenizer st = new StringTokenizer(line);
-                    String check = st.nextToken();
-                    if(check.equals("Board"))
+                    String flag = st.nextToken();
+                    if(flag.equals("Ready"))
                     {
-                        shipStrings1[shipCounter] = line;
-                        shipCounter++;
 
-                        if(shipCounter == 5)
-                        {
-                            yourBoard.fromString(shipStrings1);
-                            yourBoard.updateShips();
-                        }
-
+                        (t = new Thread( new Mouth("Yes"))).start();
                     }
-                    else if(check.equals("Move"))
+                    else if(flag.equals("Yes"))
+                    {
+                        for (int i = 0; i < 5; i++) {
+
+                            (t = new Thread(new Mouth(shipStrings[i]))).start();
+                            System.out.println("Just sent ship " + i);
+                        }
+                    }
+                    else if(flag.equals("Board"))
+                    {
+
+                        opponentBoard.fromString(line);
+                        opponentBoard.updateShips();
+                    }
+                    else if(flag.equals("Torpedo"))
                     {
                         int i = Integer.parseInt(st.nextToken());
                         int j = Integer.parseInt(st.nextToken());
 
                         myBoard.handleTurn(i,j);
                         myTurn = true;
+                        myBoard.myTurn = true;
                     }
-*/
-                    //heard.setText(line); // your code replaces this ... does
-                    // what you need to do in the game based on this message,
-                    // not just print to 'heard' field like I do here.
-                    //System.out.println("heard:"+line); write to someplace
+
                     Thread.sleep(1000);
-                    //if (line==null || line.equals("null") ) { keepGoing = false; }
+                    if (line==null || line.equals("null") ) { keepGoing = false; }
 
                 }
                 catch(Exception e )

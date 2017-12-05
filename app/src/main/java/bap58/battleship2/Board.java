@@ -445,7 +445,7 @@ public class Board extends View
         {
             Ship ship = it.next();
 
-            /*
+
             StringTokenizer st = new StringTokenizer(shipString[counter]);
             String dummy = st.nextToken();
             String str = st.nextToken();
@@ -456,14 +456,6 @@ public class Board extends View
             ship.setOrientation(str);
             str = st.nextToken();
             ship.setSize(Integer.parseInt(str));
-
-            */
-            Log.i("____________", shipString[counter]);
-            String[] st = shipString[counter].split(" ");
-            ship.setI(Integer.parseInt(st[1]));
-            ship.setJ(Integer.parseInt(st[2]));
-            ship.setOrientation(st[3]);
-            ship.setSize(Integer.parseInt(st[4]));
 
             counter++;
         }

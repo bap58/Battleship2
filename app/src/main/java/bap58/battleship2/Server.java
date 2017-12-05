@@ -88,10 +88,15 @@ public class Server
             {
                 try
                 {
+
                     String msg = bin.readLine();
-                    System.out.println("Ear read ="+msg);
+
+                    System.out.println("Ear read =" + msg);
                     share(msg);
-                    //if (msg==null || msg.equals("null") ) { keepGoing = false; }
+                    if (msg == null || msg.equals("null")) {
+                        keepGoing = false;
+                    }
+
                 }
                 catch( Exception e )
                 { System.out.println("Ear error="+e); keepGoing = false; }
