@@ -143,13 +143,15 @@ public class GameActivity extends AppCompatActivity
             int i = ((int)m.getX()-squareSize)/squareSize;
             int j = ((int)m.getY()-squareSize)/squareSize;
 
-            //This is just me testing some of the new functions, they seem to be working
-            //Did not put in any error checking, so make sure not to click outside the board or else
-            //it will explode lol
-            if(!viewMe && i >= 0 && i < 10 && j >= 0 && j < 10)
+
+            if(myTurn && (!viewMe && i >= 0 && i < 10 && j >= 0 && j < 10))
             {
                 opponentBoard.handleTurn(i, j);
                 opponentBoard.updateIfSunk();
+                String line = "Torpedo " + i + " " + j;
+                (t = new Thread( new Mouth(line))).start();
+                myTurn = false;
+
             }
             else if(i >= 0 && i < 10 && j >= 11 && j < 13)
             {
@@ -242,7 +244,8 @@ public class GameActivity extends AppCompatActivity
                         case "Board":
                             opponentBoard.fromString(line);
                         case "Torpedo":
-                            opponentBoard.torpedo(line);
+                            myBoard.torpedo(line);
+                            myTurn = true;
                         default:
                             Log.i("-------", "loop not prepared for that message" + line);
                     }
