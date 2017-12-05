@@ -36,6 +36,8 @@ public class Server
                 ears[earCount] = new Ear(client, earCount );
                 ears[earCount].start();
                 earCount++;
+
+                System.out.println("Player " + earCount + " just connected!");
             }
         }
         catch( Exception e ) { System.err.println("Game Relay: error = "+e); }
