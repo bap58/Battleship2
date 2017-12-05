@@ -42,13 +42,13 @@ public class GameActivity extends AppCompatActivity
     Board myBoard;       //where the player located his ships, and where his opponent has launched torpedoes
     Board opponentBoard; //where the player has launched torpedoes, and whether or not the guesses where correct
 
-    Boolean myTurn = false; //this mobile game works on a turn basis
+    Boolean myTurn = true; //this mobile game works on a turn basis
     Boolean viewMe = false; //flag to decide which board to show
 
     BufferedReader bin; // object for input from port
     PrintWriter pout;   // object for output to port
 
-    String ip = "10.0.0.57"; //number depending on the server it is running on
+    String ip = "10.0.2.2"; //number depending on the server it is running on
 
     int port = 11013;  //It can be any number as long as it is the same in the Server.java code
 
@@ -60,6 +60,7 @@ public class GameActivity extends AppCompatActivity
     int shipCounter = 0;
 
     Thread t;
+    boolean firstClick = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -148,9 +149,12 @@ public class GameActivity extends AppCompatActivity
             {
                 opponentBoard.handleTurn(i, j);
                 opponentBoard.updateIfSunk();
+
                 String line = "Torpedo " + i + " " + j;
-                (t = new Thread( new Mouth(line))).start();
+                (t = new Thread(new Mouth(line))).start();
                 myTurn = false;
+                myBoard.myTurn = false;
+
 
             }
             else if(i >= 0 && i < 10 && j >= 11 && j < 13)
@@ -239,13 +243,16 @@ public class GameActivity extends AppCompatActivity
                             for (int i = 0; i < 5; i++){
 
                                 (t = new Thread( new Mouth(shipStrings[i]))).start();
-
+                                System.out.println("Just sent ship " + i);
                             }
+
                         case "Board":
                             opponentBoard.fromString(line);
+                            opponentBoard.updateShips();
                         case "Torpedo":
                             myBoard.torpedo(line);
                             myTurn = true;
+                            myBoard.myTurn = true;
                         default:
                             Log.i("-------", "loop not prepared for that message" + line);
                     }

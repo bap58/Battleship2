@@ -34,9 +34,19 @@ public class Server
                 System.out.println("Game Relay: accepted client connection ");
 
                 ears[earCount] = new Ear(client, earCount );
+                System.out.println("About to start");
                 ears[earCount].start();
+
+
                 earCount++;
+                System.out.println(earCount);
+
+
+
+
             }
+
+
         }
         catch( Exception e ) { System.err.println("Game Relay: error = "+e); }
         while ( true ) {} // hang
@@ -59,17 +69,24 @@ public class Server
 
             // record args
             id = i;
+            System.out.println("Just made id");
             sock = s;
+
+            System.out.println("just made id and socket");
 
             // set up input and output thingies
             try
             {
+
                 InputStream in = sock.getInputStream();
+                System.out.println("Just made inputStream");
                 bin = new BufferedReader( new InputStreamReader(in) );
                 pout = new PrintWriter( sock.getOutputStream(), true);
+                System.out.println("Just finished try");
             }
             catch(Exception e)
             { System.out.println("Ear error opening i/o on pipe:"+e); }
+
 
         }
 
@@ -82,9 +99,13 @@ public class Server
                 try
                 {
                     String msg = bin.readLine();
-                    System.out.println("Ear read ="+msg);
-                    share(msg);
-                    if (msg==null || msg.equals("null") ) { keepGoing = false; }
+                    if(msg != null) {
+                        System.out.println("Ear read =" + msg);
+                        share(msg);
+                        if (msg == null || msg.equals("null")) {
+                            keepGoing = false;
+                        }
+                    }
                 }
                 catch( Exception e )
                 { System.out.println("Ear error="+e); keepGoing = false; }
