@@ -33,6 +33,7 @@ public class Board extends View
     static int[] sizes = {2, 3, 3, 4, 5};
     boolean inSetup = true;
     boolean myBoard;
+    boolean myTurn = false;
     //on own board list ships that player will place
     //on opponent board list is not drawn unless hit
     LinkedList<Ship> ships;
@@ -146,6 +147,18 @@ public class Board extends View
                 option = "See My Board";
             }
             canvas.drawText(option, 3 * squareSize / 2, 13 * squareSize + squareSize / 2, myPaint);
+
+            String message = "";
+            if(myTurn)
+            {
+                message = "It's your turn!";
+            }
+            else
+            {
+                message = "Waiting for opponent...";
+            }
+            myPaint.setTextSize(70);
+            canvas.drawText(message, 3 * squareSize / 2, 16 * squareSize + squareSize / 2, myPaint);
 
         }
         //System.out.println("done drawing board");
