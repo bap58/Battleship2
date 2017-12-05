@@ -478,6 +478,8 @@ public class Board extends View
         newShip.setOrientation(st[3]);
         newShip.setSize(Integer.parseInt(st[4]));
         ships.add(newShip);
+
+        System.out.println("THe opponent passed " + ships.size() + "ships");
     }
 
 

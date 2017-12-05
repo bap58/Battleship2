@@ -170,13 +170,13 @@ public class GameActivity extends AppCompatActivity
                 }
             }
 
-/*
+
             if(opponentBoard.winner() == true)
             {
                 System.out.println("Winner Winner Chicken Dinner");
             }
             //setContentView(yourBoard);
-*/
+
             if(!viewMe)
             {
                 setContentView(opponentBoard);
@@ -245,8 +245,16 @@ public class GameActivity extends AppCompatActivity
                                 (t = new Thread( new Mouth(shipStrings[i]))).start();
                                 System.out.println("Just sent ship " + i);
                             }
+                            (t = new Thread( new Mouth("Yes"))).start();
+                        case "Yes":
+                            for (int i = 0; i < 5; i++){
+
+                                (t = new Thread( new Mouth(shipStrings[i]))).start();
+                                System.out.println("Just sent ship " + i);
+                            }
 
                         case "Board":
+                            Log.i("-------", "I heard......" + line);
                             opponentBoard.fromString(line);
                             opponentBoard.updateShips();
                         case "Torpedo":
@@ -254,7 +262,7 @@ public class GameActivity extends AppCompatActivity
                             myTurn = true;
                             myBoard.myTurn = true;
                         default:
-                            Log.i("-------", "loop not prepared for that message" + line);
+                            Log.i("-------", "loop not prepared for that message " + line);
                     }
 
                     /*
@@ -286,7 +294,7 @@ public class GameActivity extends AppCompatActivity
                     // not just print to 'heard' field like I do here.
                     //System.out.println("heard:"+line); write to someplace
                     Thread.sleep(1000);
-                    if (line==null || line.equals("null") ) { keepGoing = false; }
+                    //if (line==null || line.equals("null") ) { keepGoing = false; }
 
                 }
                 catch(Exception e )

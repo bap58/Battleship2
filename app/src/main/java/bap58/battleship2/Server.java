@@ -21,7 +21,7 @@ public class Server
 
     public Server()
     {
-        System.out.println("Game Relay starting ...");
+        System.out.println("Battleships starting ...");
         try
         {
             ssock = new ServerSocket(port); // open socket for calls
@@ -34,8 +34,13 @@ public class Server
                 System.out.println("Game Relay: accepted client connection ");
 
                 ears[earCount] = new Ear(client, earCount );
-                ears[earCount].start();
                 earCount++;
+
+                if (earCount == 2)
+                {
+                    ears[0].start();
+                    ears[1].start();
+                }
 
                 System.out.println("Player " + earCount + " just connected!");
             }
@@ -86,7 +91,7 @@ public class Server
                     String msg = bin.readLine();
                     System.out.println("Ear read ="+msg);
                     share(msg);
-                    if (msg==null || msg.equals("null") ) { keepGoing = false; }
+                    //if (msg==null || msg.equals("null") ) { keepGoing = false; }
                 }
                 catch( Exception e )
                 { System.out.println("Ear error="+e); keepGoing = false; }
