@@ -28,15 +28,15 @@ public class Board extends View
     implements Serializable
 {
 
-    BoardSquare[][] theSquares;
-    static int dimension = 10;
-    static int[] sizes = {2, 3, 3, 4, 5};
-    boolean inSetup = true;
-    boolean myBoard;
-    boolean myTurn = false;
-    //on own board list ships that player will place
-    //on opponent board list is not drawn unless hit
-    LinkedList<Ship> ships;
+    BoardSquare[][] theSquares; //Matrix of boardSquares that will make up board
+    static int dimension = 10; //Dimension of board that will not change
+    static int[] sizes = {2, 3, 3, 4, 5}; //Sizes of 5 game pieces
+    boolean inSetup = true; //Flag to tell whether or not the board is in setup mode or not
+    boolean myBoard; //Flag to tell whether or not this board is my board or the opponent's
+    boolean myTurn = false; //Flag to tell whether it is the turn of the player with this board
+
+    LinkedList<Ship> ships; //Linked list of ships on this board
+    String message; //Will be used to send each player messages
 
     public Board(Context context, boolean mine) {
 
@@ -46,14 +46,15 @@ public class Board extends View
         myBoard = mine;
         ships = new LinkedList<Ship>();
 
+        message = ""; //Set message to a default value
+
+        //Create the boardSquares that will make up the board
         theSquares = new BoardSquare[dimension][dimension];
         for (int i = 0; i < dimension; i++){
             for (int j = 0; j < dimension; j++) {
                 theSquares[i][j] = new BoardSquare(i, j);
             }
         }
-
-        //setShips(ships);
 
         //only set ships if it is my Board
         //if it is the opponent's board, I will get the information in the messages
@@ -66,15 +67,15 @@ public class Board extends View
         //create list of possible wins when player pushes play game
     }
 
+    //Function that is invoked every time we draw a board
     @Override public void onDraw(Canvas canvas) {
-        //super.onDraw(canvas);
 
         Paint myPaint = new Paint();
 
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
-                //draw the border of the square in black
 
+                //draw the border of the square in black
                 myPaint.setStrokeWidth(edgeWidth);
                 myPaint.setColor(Color.BLACK);
                 canvas.drawRect(theSquares[i][j].getX(), theSquares[i][j].getY(),
@@ -111,7 +112,8 @@ public class Board extends View
             }
         }
 
-        if (inSetup) {
+
+        if (inSetup) { //If the board is in setup mode, draw setup buttons
             //Draw two rectangles for buttons
             myPaint.setColor(Color.GRAY);
             canvas.drawRect(squareSize + edgeWidth, 12 * squareSize + edgeWidth,
@@ -125,12 +127,14 @@ public class Board extends View
             //put text within the rectangles
             myPaint.setColor(Color.BLACK);
             myPaint.setTextSize(100);
+            //First rectangle will be used to rotate ships
             canvas.drawText("ROTATE", 4 * squareSize, 13 * squareSize + squareSize / 2, myPaint);
             myPaint.setTextSize(90);
+            //Second rectangle will be used to let the app know that the player is ready for battle
             canvas.drawText("READY FOR BATTLE", 1 * squareSize, 16 * squareSize + squareSize / 2, myPaint);
 
         }
-        else
+        else //If game is in play phase, draw button to flip between your board and the opponent's
         {
             myPaint.setColor(Color.GRAY);
             canvas.drawRect(squareSize + edgeWidth, 12 * squareSize + edgeWidth,
@@ -139,52 +143,25 @@ public class Board extends View
             myPaint.setColor(Color.BLACK);
             myPaint.setTextSize(90);
             String option = "";
-            if(myBoard) {
+            if(myBoard) { //If this board is my board
                 option = "See Enemy Board";
             }
-            else
+            else //If this board is my opponent's board
             {
                 option = "See My Board";
             }
             canvas.drawText(option, 3 * squareSize / 2, 13 * squareSize + squareSize / 2, myPaint);
 
-            String message = "";
-            if(myTurn)
-            {
-                message = "It's your turn!";
-            }
-            else
-            {
-                message = "Waiting for opponent...";
-            }
-            myPaint.setTextSize(70);
-            canvas.drawText(message, 3 * squareSize / 2, 16 * squareSize + squareSize / 2, myPaint);
+            //The message that is drawn is based on the moves taken in a game
+            //For example, a hit will result in displaying a message to your opponent that
+            //one of their ships has been hit
+            myPaint.setTextSize(50);
+            canvas.drawText(message, 1 * squareSize / 2, 16 * squareSize + squareSize / 2, myPaint);
 
         }
-        //System.out.println("done drawing board");
     }
 
-    public BoardSquare findSquare(){
-
-        BoardSquare square = null;
-        //get where player clicked
-        //is this necessary if it's a button
-
-        return square;
-    }
-
-    /*
-    Other functions worth writing: whose turn, winner, play, save file, load file,
-     */
-
-    // get function for member variable dimension
-    public static int getDimension() {return  dimension;}
-
-    public LinkedList<Ship> getShips() {
-        LinkedList<Ship> solutions = new LinkedList<Ship>();
-        return solutions;
-    }
-
+    //This function creates 5 new default ships and is called from the Board constructor
     public void setShips(LinkedList<Ship> ships) {
         Ship ship;
         int[] sizes = {2, 3, 3, 4, 5};
@@ -193,24 +170,12 @@ public class Board extends View
             ships.add(ship);
         }
 
-        /*
-        Ship ship1 = new Ship(1, 1, 2, "horizontal");
-        Ship ship2 = new Ship(1, 3, 3, "horizontal");
-        Ship ship3 = new Ship(1, 5, 3, "horizontal");
-        Ship ship4 = new Ship(1, 7, 4, "horizontal");
-        Ship ship5 = new Ship(1, 9, 5, "horizontal");
-
-        ships.add(ship1);
-        ships.add(ship2);
-        ships.add(ship3);
-        ships.add(ship4);
-        ships.add(ship5);
-
-        */
-
         updateShips();
     }
 
+    //A ship can be gray or yellow, gray is its default color, but when a player clicks on
+    //a ship to select it in set up mode, the ship should turn yellow
+    //This function handles the changing of the ships color
     public void setShipColor(int iter, String color)
     {
         Iterator<Ship> it = ships.iterator();
@@ -220,21 +185,22 @@ public class Board extends View
             Ship ship = it.next();
             if(counter == iter)
             {
-                if(color.equals("yellow"))
+                if(color.equals("yellow")) //If color passed in is yellow
                 {
                     int i = ship.getI();
                     int j = ship.getJ();
                     String o = ship.getOrientation();
                     int s = ship.getSize();
 
-                    if(o.equals("horizontal"))
+                    if(o.equals("horizontal")) //Check orientation
                     {
                         for(int k = i; k < i + s; k++)
                         {
+                            //change the color of the squares of the ship in yellow
                             theSquares[k][j].setColor("yellow");
                         }
                     }
-                    else
+                    else //Do the same thing for vertically oriented ships
                     {
                         for(int k = j; k < j + s; k++)
                         {
@@ -242,8 +208,8 @@ public class Board extends View
                         }
                     }
                 }
-                else if(color.equals("gray"))
-                {
+                else if(color.equals("gray")) //If color passed in is gray, follow same steps as
+                {                               //for yellow
                     int i = ship.getI();
                     int j = ship.getJ();
                     String o = ship.getOrientation();
@@ -269,16 +235,19 @@ public class Board extends View
         }
     }
 
+    //This function takes in the i and j of a ship and changes its orientation so that it
+    //will be rotated when the board is redrawn
     public void rotateShip(int i1, int j1){
 
         Iterator<Ship> it = ships.iterator();
         while(it.hasNext())
         {
             Ship ship = it.next();
-            if(ship.getI() == i1 && ship.getJ() == j1)
-            {
+            if(ship.getI() == i1 && ship.getJ() == j1) //Figure out which ship has the i and j
+            {                                          //that matches the i and j passed in
                 String o = ship.getOrientation();
                 String newO = "";
+                //Change the orientation of ship
                 if(o.equals("vertical"))
                 {
                     newO = "horizontal";
@@ -288,9 +257,10 @@ public class Board extends View
                     newO = "vertical";
                 }
 
+                //Make sure that ship will not overlap ship with new orientation
                 if(!overlapsAnotherShip(newO, ship.getSize(), ship.getI(), ship.getJ()))
                 {
-                    ship.rotate();
+                    ship.rotate(); //Then rotate ship using the ship's built in rotate function
                 }
             }
         }
@@ -351,6 +321,11 @@ public class Board extends View
 
     }
 
+
+    //This function takes in an orientation, size, i and a j
+    //It checks to see if a ship with these attributes would overlap another existing ship
+    //Returns false if it would not overlap another ship and then we know that we
+    //can either move a ship or rotate a ship to the desired location
     boolean overlapsAnotherShip(String o, int s, int i1, int j1)
     {
         boolean answer = false;
@@ -567,6 +542,24 @@ public class Board extends View
         }
 
         return allSunk;
+    }
+
+
+    public boolean hit(int i, int j)
+    {
+        boolean hit = false;
+
+        if(theSquares[i][j].getColor().equals("red"))
+        {
+            hit = true;
+        }
+
+        return hit;
+    }
+
+    public void setMessage(String msg)
+    {
+        message = msg;
     }
 
 

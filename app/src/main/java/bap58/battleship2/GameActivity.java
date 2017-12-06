@@ -65,6 +65,8 @@ public class GameActivity extends AppCompatActivity
 
     int boardCount = 0;
 
+    boolean messageFlag;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,6 +137,7 @@ public class GameActivity extends AppCompatActivity
         //myBoard.setOnTouchListener(touchListener);
         //opponentBoard.setOnTouchListener(touchListener);
         setContentView(opponentBoard);
+
 
 
     }
@@ -240,52 +243,6 @@ public class GameActivity extends AppCompatActivity
                 {
                     line = bin.readLine();
 
-                    /*String[] st = line.split(" ");
-                    switch (st[0]){
-                        case "Ready":
-                            /*if(boardCount <= 5)
-                            {
-                                for (int i = 0; i < 5; i++) {
-
-                                    (t = new Thread(new Mouth(shipStrings[i]))).start();
-                                    System.out.println("Just sent ship " + i);
-                                }
-                            }*/
-                            /*(t = new Thread( new Mouth("Yes"))).start();
-                        case "Yes":
-                            if(boardCount < 5)
-                            {
-                                for (int i = 0; i < 5; i++) {
-
-                                    (t = new Thread(new Mouth(shipStrings[i]))).start();
-                                    System.out.println("Just sent ship " + i);
-                                }
-                            }
-
-                        case "Board":
-                            Log.i("-------", "I heard......" + line);
-                            if(boardCount < 5)
-                            {
-                                opponentShipStrings[boardCount] = line;
-                                boardCount++;
-                            }
-                            if(boardCount == 5)
-                            {
-                                opponentBoard.fromString(opponentShipStrings);
-                                opponentBoard.updateShips();
-                            }
-
-
-                        case "Torpedo":
-                            myBoard.torpedo(line);
-                            myTurn = true;
-                            myBoard.myTurn = true;
-                        default:
-                            Log.i("-------", "loop not prepared for that message " + line);*/
-                    //}
-
-
-
                     StringTokenizer st = new StringTokenizer(line);
                     String flag = st.nextToken();
                     if(flag.equals("Ready"))
@@ -316,6 +273,21 @@ public class GameActivity extends AppCompatActivity
                         myTurn = true;
                         myBoard.myTurn = true;
                         opponentBoard.myTurn = true;
+                        String msg;
+                        if(myBoard.hit(i,j))
+                        {
+                            msg = "Opponent's Last Move:Hit at " + i + ", " + j + "!";
+                            myBoard.setMessage(msg);
+                            opponentBoard.setMessage(msg);
+
+                        }
+                        else
+                        {
+                            msg = "Opponent's Last Move:Miss at " + i + ", " + j + "!";
+                            myBoard.setMessage(msg);
+                            opponentBoard.setMessage(msg);
+
+                        }
                     }
 
                     Thread.sleep(1000);
