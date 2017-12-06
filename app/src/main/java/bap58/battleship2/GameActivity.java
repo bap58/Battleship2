@@ -65,6 +65,7 @@ public class GameActivity extends AppCompatActivity
 
     int boardCount = 0;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,6 +162,7 @@ public class GameActivity extends AppCompatActivity
                     (t = new Thread(new Mouth(line))).start();
                     myTurn = false;
                     myBoard.myTurn = false;
+                    opponentBoard.myTurn = false;
                 }
 
             }
@@ -313,6 +315,7 @@ public class GameActivity extends AppCompatActivity
                         myBoard.handleTurn(i,j);
                         myTurn = true;
                         myBoard.myTurn = true;
+                        opponentBoard.myTurn = true;
                     }
 
                     Thread.sleep(1000);
