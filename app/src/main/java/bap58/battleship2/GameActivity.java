@@ -67,6 +67,11 @@ public class GameActivity extends AppCompatActivity
 
     boolean messageFlag;
 
+    int numberOfMineSunk = 0;
+    int numberOfOpponentSunk = 0;
+
+    boolean gameOver;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +91,8 @@ public class GameActivity extends AppCompatActivity
         //instatiate opponent board
         opponentBoard = new Board(this, false);
         opponentBoard.inSetup = false;
+
+        gameOver = false;
 
         //connecting to the server
         try
@@ -153,7 +160,7 @@ public class GameActivity extends AppCompatActivity
             int j = ((int)m.getY()-squareSize)/squareSize;
 
 
-            if(myTurn && (!viewMe && i >= 0 && i < 10 && j >= 0 && j < 10))
+            if(myTurn && (!viewMe && i >= 0 && i < 10 && j >= 0 && j < 10) && (gameOver == false))
             {
                 if(!opponentBoard.theSquares[i][j].getColor().equals("red") &&
                         !opponentBoard.theSquares[i][j].getColor().equals("white"))
@@ -166,6 +173,47 @@ public class GameActivity extends AppCompatActivity
                     myTurn = false;
                     myBoard.myTurn = false;
                     opponentBoard.myTurn = false;
+
+                    String msg1;
+                    String msg2;
+
+
+                    if(myTurn == false)
+                    {
+                        msg2 = "Waiting for opponent to take turn.";
+                        myBoard.setMessage2(msg2);
+                        opponentBoard.setMessage2(msg2);
+                    }
+
+                    if(opponentBoard.winner())
+                    {
+                        msg1 = "You sunk your opponent's ships. YOU WIN!!";
+                        myBoard.setMessage1(msg1);
+                        opponentBoard.setMessage1(msg1);
+
+                        msg2 = "";
+                        myBoard.setMessage2(msg2);
+                        opponentBoard.setMessage2(msg2);
+
+                        gameOver = true;
+                    }
+                    else if(opponentBoard.numberOfSunk() > numberOfOpponentSunk) //Tell User that opponent sunk a ship
+                    {
+                        numberOfOpponentSunk = opponentBoard.numberOfSunk();
+
+                        msg1 = "You sunk the opponent's Battleship!";
+                        myBoard.setMessage1(msg1);
+                        opponentBoard.setMessage1(msg1);
+                    }
+                    else
+                    {
+                        msg1 = " ";
+                        myBoard.setMessage1(msg1);
+                        opponentBoard.setMessage1(msg1);
+                    }
+
+
+
                 }
 
             }
@@ -270,27 +318,66 @@ public class GameActivity extends AppCompatActivity
                         int j = Integer.parseInt(st.nextToken());
 
                         myBoard.handleTurn(i,j);
+                        myBoard.updateIfSunk();
                         myTurn = true;
                         myBoard.myTurn = true;
                         opponentBoard.myTurn = true;
                         String msg;
+                        String msg1;
+                        String msg2;
                         if(myBoard.hit(i,j))
                         {
-                            msg = "Opponent's Last Move:Hit at " + i + ", " + j + "!";
+                            msg = "Opponent's Last Move: Hit at " + i + ", " + j + "!";
                             myBoard.setMessage(msg);
                             opponentBoard.setMessage(msg);
 
+                        }
+                        else if(!myBoard.hit(i,j))
+                        {
+                            msg = "Opponent's Last Move: Miss at " + i + ", " + j + "!";
+                            myBoard.setMessage(msg);
+                            opponentBoard.setMessage(msg);
+
+                        }
+
+                        if(myTurn)
+                        {
+                            msg2 = "It's Your Turn!";
+                            myBoard.setMessage2(msg2);
+                            opponentBoard.setMessage2(msg2);
+                        }
+
+                        if(myBoard.winner())
+                        {
+                            msg1 = "Your last ship was sunk, the opponent wins!";
+                            myBoard.setMessage1(msg1);
+                            opponentBoard.setMessage1(msg1);
+
+                            msg2 = "";
+                            myBoard.setMessage2(msg2);
+                            opponentBoard.setMessage2(msg2);
+
+                            gameOver = true;
+                        }
+                        else if(myBoard.numberOfSunk() > numberOfMineSunk) //Tell User that opponent sunk a ship
+                        {
+                            numberOfMineSunk = myBoard.numberOfSunk();
+
+                            msg1 = "The Opponent Sunk Your BattleShip!";
+                            myBoard.setMessage1(msg1);
+                            opponentBoard.setMessage1(msg1);
                         }
                         else
                         {
-                            msg = "Opponent's Last Move:Miss at " + i + ", " + j + "!";
-                            myBoard.setMessage(msg);
-                            opponentBoard.setMessage(msg);
-
+                            msg1 = " ";
+                            myBoard.setMessage1(msg1);
+                            opponentBoard.setMessage1(msg1);
                         }
-                    }
 
-                    Thread.sleep(1000);
+
+
+                    }
+                    this.sleep(100);
                     if (line==null || line.equals("null") ) { keepGoing = false; }
 
                 }

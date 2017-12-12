@@ -37,6 +37,8 @@ public class Board extends View
 
     LinkedList<Ship> ships; //Linked list of ships on this board
     String message; //Will be used to send each player messages
+    String message1;
+    String message2;
 
     public Board(Context context, boolean mine) {
 
@@ -47,6 +49,8 @@ public class Board extends View
         ships = new LinkedList<Ship>();
 
         message = ""; //Set message to a default value
+        message1 = "";
+        message2 = "";
 
         //Create the boardSquares that will make up the board
         theSquares = new BoardSquare[dimension][dimension];
@@ -152,11 +156,21 @@ public class Board extends View
             }
             canvas.drawText(option, 3 * squareSize / 2, 13 * squareSize + squareSize / 2, myPaint);
 
+            myPaint.setColor(Color.GREEN);
+            canvas.drawRect(squareSize + edgeWidth, 15 * squareSize + edgeWidth,
+                    11 * squareSize - edgeWidth,
+                    17 * squareSize - edgeWidth, myPaint);
+            myPaint.setColor(Color.BLACK);
+            myPaint.setTextSize(90);
+            canvas.drawText("Refresh Game", 3 * squareSize / 2, 16 * squareSize + squareSize / 2, myPaint);
+
             //The message that is drawn is based on the moves taken in a game
             //For example, a hit will result in displaying a message to your opponent that
             //one of their ships has been hit
             myPaint.setTextSize(50);
-            canvas.drawText(message, 1 * squareSize / 2, 16 * squareSize + squareSize / 2, myPaint);
+            canvas.drawText(message, 1 * squareSize / 2, 17 * squareSize + squareSize / 2, myPaint);
+            canvas.drawText(message1, 1 * squareSize / 2, 18 * squareSize + squareSize / 2, myPaint);
+            canvas.drawText(message2, 1 * squareSize / 2, 14 * squareSize + squareSize / 2, myPaint);
 
         }
     }
@@ -523,6 +537,28 @@ public class Board extends View
         }
     }
 
+    public int numberOfSunk()
+    {
+        int sunkCounter = 0;
+        Iterator<Ship> it = ships.iterator();
+        while(it.hasNext())
+        {
+            Ship ship = it.next();
+
+
+            if(ship.getSunk() == true)
+            {
+                sunkCounter++;
+            }
+
+
+        }
+
+        return sunkCounter;
+    }
+
+
+
     //This function goes through the list of ships and finds out if all of them are sunk
     //If true, we have a winner
     //If false, nothing will happen
@@ -561,6 +597,8 @@ public class Board extends View
     {
         message = msg;
     }
+    public void setMessage1(String msg) {message1 = msg;}
+    public void setMessage2(String msg) {message2 = msg;}
 
 
 
