@@ -29,22 +29,6 @@ public class SetupActivity extends AppCompatActivity
 
         setContentView(myBoard);
 
-        /*
-        Iterator<Ship> it = myBoard.ships.iterator();
-        while(it.hasNext())
-        {
-            Ship ship = it.next();
-            int i = ship.getI();
-            int j = ship.getJ();
-
-            myBoard.rotateShip(i,j);
-        }
-        */
-
-        //Not necessary, remember this only executes when it is created
-        //and we already are displaying the board
-        //myBoard.updateShips();
-        //setContentView(myBoard);
     }
 
     View.OnTouchListener touchListener = new View.OnTouchListener(){
