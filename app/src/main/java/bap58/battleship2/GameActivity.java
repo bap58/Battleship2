@@ -370,7 +370,7 @@ public class GameActivity extends AppCompatActivity
 
 
                     }
-                    this.sleep(100); //A very short pause to make sure boards come over server
+                    this.sleep(300); //A very short pause to make sure boards come over server
                                             //in the correct manner
                     if (line==null || line.equals("null") ) { keepGoing = false; }
 

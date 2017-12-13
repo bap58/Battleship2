@@ -599,7 +599,7 @@ public class Board extends View
     {
         Iterator<Ship> it = ships.iterator();
         boolean allSunk = false;
-        
+
         if(numberOfSunk() == ships.size()) //if the number of sunk is equal to 5
         {
             allSunk = true; //All ships have been sunk and there is in fact a winner
