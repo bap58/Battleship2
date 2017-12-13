@@ -7,22 +7,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-public class InstructionsActivity extends AppCompatActivity {
+public class Instructions extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //returns to the previous state the activity was in before another intent was called
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_instructions);
+
+        //Use XML file activity_main_menu to show buttons on first activity
+        setContentView(R.layout.instructions);
+
+        //Creating a toolbar that will collapse as the player scrolls down
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
     }
 }

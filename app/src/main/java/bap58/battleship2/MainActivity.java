@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void clickedButton (View v) {
 
+        Log.i("-----", v.getContentDescription().toString());
         //if else if statement to handle button selection in Main Activity
         if(v.getContentDescription().toString().equals("start")) {
 
@@ -47,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i("-----", "I am in instructions");
 
             //creating a new intent to pass onto a new activity to read the instructions
-            Intent instructions = new Intent(this, InstructionsActivity.class);
+            Intent instructions = new Intent(this, Instructions.class);
 
             //start running instructions of the game and pause the main activity
             //until the player comes back to Main Activity
