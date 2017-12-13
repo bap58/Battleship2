@@ -36,10 +36,12 @@ public class Board extends View
     boolean myTurn = false; //Flag to tell whether it is the turn of the player with this board
 
     LinkedList<Ship> ships; //Linked list of ships on this board
-    String message; //Will be used to send each player messages
+    //Strings will be used to send each player messages
+    String message;
     String message1;
     String message2;
 
+    //Constructor for Board
     public Board(Context context, boolean mine) {
 
         super(context);
@@ -48,7 +50,8 @@ public class Board extends View
         myBoard = mine;
         ships = new LinkedList<Ship>();
 
-        message = ""; //Set message to a default value
+        //Set messages to a default value
+        message = "";
         message1 = "";
         message2 = "";
 
@@ -62,13 +65,10 @@ public class Board extends View
 
         //only set ships if it is my Board
         //if it is the opponent's board, I will get the information in the messages
-        if (mine) {
+        if (mine)
+        {
             setShips(ships);
-        } /*else {
-            getShips();
-        }*/
-        //randomly place ships on personal board
-        //create list of possible wins when player pushes play game
+        }
     }
 
     //Function that is invoked every time we draw a board
@@ -118,7 +118,7 @@ public class Board extends View
 
 
         if (inSetup) { //If the board is in setup mode, draw setup buttons
-            //Draw two rectangles for buttons
+            //Draw two rectangles under the board for buttons
             myPaint.setColor(Color.GRAY);
             canvas.drawRect(squareSize + edgeWidth, 12 * squareSize + edgeWidth,
                     11 * squareSize - edgeWidth,
@@ -156,6 +156,7 @@ public class Board extends View
             }
             canvas.drawText(option, 3 * squareSize / 2, 13 * squareSize + squareSize / 2, myPaint);
 
+            //Add refresh button for user to click in order update game
             myPaint.setColor(Color.GREEN);
             canvas.drawRect(squareSize + edgeWidth, 15 * squareSize + edgeWidth,
                     11 * squareSize - edgeWidth,
@@ -164,6 +165,7 @@ public class Board extends View
             myPaint.setTextSize(90);
             canvas.drawText("Refresh Game", 3 * squareSize / 2, 16 * squareSize + squareSize / 2, myPaint);
 
+            //These lines represent the messaging system between users
             //The message that is drawn is based on the moves taken in a game
             //For example, a hit will result in displaying a message to your opponent that
             //one of their ships has been hit
@@ -176,22 +178,27 @@ public class Board extends View
     }
 
     //This function creates 5 new default ships and is called from the Board constructor
-    public void setShips(LinkedList<Ship> ships) {
+    public void setShips(LinkedList<Ship> ships)
+    {
         Ship ship;
         int[] sizes = {2, 3, 3, 4, 5};
-        for (int i = 0; i < 5; i++){
+        //Create 5 new ships and add them to list
+        for (int i = 0; i < 5; i++)
+        {
             ship = new Ship(1, 1 + i*2, sizes[i], "horizontal");
             ships.add(ship);
         }
 
-        updateShips();
+        updateShips(); //Update board to contain newly created ships
     }
 
     //A ship can be gray or yellow, gray is its default color, but when a player clicks on
     //a ship to select it in set up mode, the ship should turn yellow
     //This function handles the changing of the ships color
+    //The index of the ship and a color are passed in
     public void setShipColor(int iter, String color)
     {
+        //Go through list of ships
         Iterator<Ship> it = ships.iterator();
         int counter = 0;
         while(counter <= iter && it.hasNext())
@@ -210,7 +217,7 @@ public class Board extends View
                     {
                         for(int k = i; k < i + s; k++)
                         {
-                            //change the color of the squares of the ship in yellow
+                            //change the color of the squares of the ship to yellow
                             theSquares[k][j].setColor("yellow");
                         }
                     }
@@ -245,7 +252,7 @@ public class Board extends View
                     }
                 }
             }
-            counter++;
+            counter++; //Update counter for while loop to stop
         }
     }
 
@@ -260,7 +267,7 @@ public class Board extends View
             if(ship.getI() == i1 && ship.getJ() == j1) //Figure out which ship has the i and j
             {                                          //that matches the i and j passed in
                 String o = ship.getOrientation();
-                String newO = "";
+                String newO = ""; //Have a string for the new orientation used to error check
                 //Change the orientation of ship
                 if(o.equals("vertical"))
                 {
@@ -281,8 +288,11 @@ public class Board extends View
 
     }
 
+    //This function will update the ships on the board. It will be called any time the board or
+    //its ships are changed so that the ships are kept up to date with the process of the game
     public void updateShips()
     {
+        //Set all the squares of the board back to blue
         for(int i = 0; i < dimension; i++)
         {
             for(int j = 0; j < dimension; j++)
@@ -290,17 +300,20 @@ public class Board extends View
                 theSquares[i][j].setColor("blue");
             }
         }
-
+        //Go through list of ships
         Iterator<Ship> it = ships.iterator();
         while(it.hasNext())
         {
+            //Get each ship and draw it on board
+            //Remember: This will now be the most updated version of each ship
             Ship ship = it.next();
+            //Save down attributes of ship to use when drawing it
             int i = ship.getI();
             int j = ship.getJ();
             int s = ship.getSize();
             String o = ship.getOrientation();
 
-            if(o.equals("horizontal"))
+            if(o.equals("horizontal")) //If horizontal
             {
                 for(int a = 0; a < s; a++)
                 {
@@ -314,10 +327,8 @@ public class Board extends View
                     }
                 }
             }
-            else
+            else //If vertical
             {
-
-
                 for(int a = 0; a < s; a++)
                 {
                     if(ship.getSelected())
@@ -330,9 +341,7 @@ public class Board extends View
                     }
                 }
             }
-
         }
-
     }
 
 
@@ -345,18 +354,19 @@ public class Board extends View
         boolean answer = false;
         String color = "blue";
 
-        if(o.equals("horizontal"))
+        if(o.equals("horizontal")) //If ship is horizontal
         {
-            for(int a = 1; a < s && i1+a < 10; a++)
+            for(int a = 1; a < s && i1+a < 10; a++) //Check all squares it would occupy
             {
+                //Check to see if square we are currently looking at is gray
                 color = theSquares[i1+a][j1].getColor();
                 if(color.equals("gray"))
                 {
-                    answer = true;
+                    answer = true; //Square is gray, so ship would overlap another ship
                 }
             }
         }
-        else    //orientation is vertical
+        else    //orientation is vertical, follow the same steps as horizontal
         {
             for(int a = 1; a < s && j1+a < 10; a++)
             {
@@ -368,27 +378,37 @@ public class Board extends View
             }
         }
 
-        return answer;
+        return answer; //Return the answer
     }
 
+    //This function will go through the list of ships and see if the i and j passed in belong to
+    //any of the ships. If the i and j passed in contain a square of a ship, the index of that ship
+    //will be returned. If not, the function will return -1
     int whichShip(int i1, int j1)
     {
-        int index = -1;
+        int index = -1; //Set index to -1
         int counter = 0;
+        //Go through list of ships
         Iterator<Ship> it = ships.iterator();
         while(it.hasNext())
         {
             Ship itShip = it.next();
+            //Go through each square of the ship we are currently looking at
             for(int a = 0; a < itShip.getSize(); a++)
             {
-                if((itShip.getOrientation().equals("horizontal")))
+                if((itShip.getOrientation().equals("horizontal"))) //If horizontal
                 {
+                    //Check to see if any of the squares of this ship match the i and j passed in
+                    //Only update i value because ship is horizontal
                     if(i1 == itShip.getI()+a && j1 == itShip.getJ())
                     {
-                        index = counter;
+                        //One of the ship squares matched the i and j passed in
+                        index = counter; //Update index to the counter which represents
+                                            //the index of the ship
                     }
                 }
-                else
+                else //If vertical, follow the same steps as horizontal, but only update j
+                    //instead of i
                 {
                     if(i1 == itShip.getI() && j1 == itShip.getJ()+a)
                     {
@@ -401,40 +421,51 @@ public class Board extends View
             counter++;
         }//end while iterating through ship list
 
-        return index;
+        return index; //-1 if ship not found, index of ship if found
     }
 
+    //This function takes in an orientation, size, i and j
+    //It then checks to see if a ship with these values goes off the edge of the board
+    //Returns true if ship will go off edge
+    //Returns false if ship does not go off edge
     public boolean isOffEdge(String orientation1, int size1, int i1, int j1)
     {
-        boolean answer = false;
+        boolean answer = false; //Start answer at false
 
         if(orientation1.equals("horizontal"))
         {
+            //If size of ship plus its starting i position is greater than width of board
             if(size1 + i1 > dimension)
             {
-                answer = true;
+                answer = true; //Then the ship is off the edge, set answer to true
             }
         }
         else    //if vertical
         {
+            //If ship size + starting j position is greater than length of the board
             if(size1 + j1 > dimension)
             {
-                answer = true;
+                answer = true; //Then the ship is off the edge, set answer to true
             }
         }
 
-        return answer;
+        return answer; //return the answer
     }
 
+    //This function takes in an array of strings that will be formatted correctly to represent
+    //ships and their attributes
+    //The function will take the array of ships and set its own game peices to have the same
+    //attributes as the ships passed in as strings
     public void fromString(String[] shipString)
     {
         int counter = 0;
+        //Go through list of ships
         Iterator<Ship> it = ships.iterator();
         while(it.hasNext())
         {
             Ship ship = it.next();
 
-
+            //Change all of the ship's values to the values indicated by string
             StringTokenizer st = new StringTokenizer(shipString[counter]);
             String dummy = st.nextToken();
             String str = st.nextToken();
@@ -446,21 +477,25 @@ public class Board extends View
             str = st.nextToken();
             ship.setSize(Integer.parseInt(str));
 
+            //Update counter to go to the next string in array
             counter++;
         }
     }
 
+    //This function takes in a string formatted as a ship and its attributes and adds it to the
+    //ships array of this board
     public void fromString(String shipString)
     {
+        //create new ship with values specified by string
         Ship newShip = new Ship(1, 1, 1 , "horizontal");
         String[] st = shipString.split(" ");
         newShip.setI(Integer.parseInt(st[1]));
         newShip.setJ(Integer.parseInt(st[2]));
         newShip.setOrientation(st[3]);
         newShip.setSize(Integer.parseInt(st[4]));
+        //add new ship to list
         ships.add(newShip);
 
-        System.out.println("THe opponent passed " + ships.size() + "ships");
     }
 
 
@@ -470,16 +505,10 @@ public class Board extends View
         String[] st = location.split(" ");
         int i = Integer.parseInt(st[1]);
         int j = Integer.parseInt(st[2]);
-            /*
-           StringTokenizer st = new StringTokenizer(IandJ);
-           int i = Integer.parseInt(st.nextToken());
-           int j = Integer.parseInt(st.nextToken());
-            */
-       //Handle the opponent's turn
-       handleTurn(i, j);
-
+        //Once i and j is determined from string
+        // Handle the opponent's turn
+        handleTurn(i, j);
     }
-
 
 
     //Takes an i and j of either player and changes the color of square based on hit or miss
@@ -513,93 +542,92 @@ public class Board extends View
             int hitCount = 0;
             if(ship.getSunk() == false) //This is so we don't check ships that are already sunk
             {
-                for (int i = 0; i < ship.getSize(); i++)
+                for (int i = 0; i < ship.getSize(); i++) //Go through each square of ship
                 {
-                    if (ship.orientation.equals("horizontal"))
+                    if (ship.orientation.equals("horizontal")) //If horizontal
                     {
+                        //If current square is red, the square of ship is hit
                         if (theSquares[ship.getI() + i][ship.getJ()].getColor().equals("red"))
                         {
-                            hitCount++;
+                            hitCount++; //increment hitCount to indicate a hit square
                         }
-                    } else {
+                    }
+                    else //It is vertical
+                    {
+                        //If current square is red, the square of ship is hit
                         if (theSquares[ship.getI()][ship.getJ() + i].getColor().equals("red"))
                         {
-                            hitCount++;
+                            hitCount++; //increment hitCount to indicate a hit square
                         }
                     }
                 }
 
-                if (hitCount == ship.getSize()) {
-                    ship.setSunk(true);
+                //If hitCount is equal to the size, every square in the ship has been hit
+                if (hitCount == ship.getSize())
+                {
+                    ship.setSunk(true); //This ship is sunk
                 }
             }
 
         }
     }
 
+    //This function will return the number of ships that are currently sunk
     public int numberOfSunk()
     {
-        int sunkCounter = 0;
+        int sunkCounter = 0; //counter for sunk ships
+        //go through list of ships
         Iterator<Ship> it = ships.iterator();
         while(it.hasNext())
         {
             Ship ship = it.next();
 
-
+            //If current ship is sunk
             if(ship.getSunk() == true)
             {
-                sunkCounter++;
+                sunkCounter++; //increment counter of sunk ships
             }
-
-
         }
-
-        return sunkCounter;
+        return sunkCounter; //return number of sunk ships
     }
 
 
 
     //This function goes through the list of ships and finds out if all of them are sunk
     //If true, we have a winner
-    //If false, nothing will happen
     public boolean winner()
     {
         Iterator<Ship> it = ships.iterator();
-        boolean allSunk = true;
-        while(it.hasNext())
+        boolean allSunk = false;
+        
+        if(numberOfSunk() == ships.size()) //if the number of sunk is equal to 5
         {
-            Ship ship = it.next();
-
-            if(ship.getSunk() == false)
-            {
-                allSunk = false;
-            }
-
+            allSunk = true; //All ships have been sunk and there is in fact a winner
         }
 
         return allSunk;
     }
 
-
+    //This function takes in an i and j and determines if that square has been hit already
     public boolean hit(int i, int j)
     {
         boolean hit = false;
 
+        //If this square is red
         if(theSquares[i][j].getColor().equals("red"))
         {
-            hit = true;
+            hit = true; //Then it was hit
         }
 
         return hit;
     }
 
+    //Setter methods for the three messages part of the user messaging system
     public void setMessage(String msg)
     {
         message = msg;
     }
     public void setMessage1(String msg) {message1 = msg;}
     public void setMessage2(String msg) {message2 = msg;}
-
-
 
 } //end implementing public class Board

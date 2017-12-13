@@ -5,10 +5,6 @@ import android.graphics.Color;
 import android.graphics.*;
 import android.view.View;
 
-/**
- * Created by joe on 11/13/17.
- */
-
 public class BoardSquare
 {
     int x;                      //x coordinate of the square from top left
@@ -46,43 +42,6 @@ public class BoardSquare
     public float getY(){return y;}
     public String getColor(){return color;}
 
-    /*
-    //drawMe lets the square draw itself on the screen
-    @Override public void onDraw(Canvas c)
-    {
-        //First get a new paint
-        Paint myPaint = new Paint();
 
-        //draw the border of the square in black
-        myPaint.setStrokeWidth(edgeWidth);
-        myPaint.setColor(Color.BLACK);
-        c.drawRect(x, y, x+squareSize, y+squareSize, myPaint);
-
-        //determine the color to fill the square
-        if(color.equals("blue"))
-        {
-            myPaint.setColor(Color.BLUE);
-        }
-        else if(color.equals("gray"))
-        {
-            myPaint.setColor(Color.GRAY);
-        }
-        else if(color.equals("red"))
-        {
-            myPaint.setColor(Color.RED);
-        }
-        else if(color.equals("white"))
-        {
-            myPaint.setColor(Color.WHITE);
-        }
-
-        //set the stroke width to 0 for the square filling
-        myPaint.setStrokeWidth(0);
-        //draw the square
-        c.drawRect(x+edgeWidth, y+edgeWidth, x+squareSize-edgeWidth,
-                y+squareSize-edgeWidth, myPaint);
-
-    }
-    */
 
 }//END class BoardSquare
